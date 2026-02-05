@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>角色关系网 - Triangle Agency</title>
+    <style>
+        :root {
+            --relation-gold: #d4a017;
+            --relation-dark: #4a3701;
+            --relation-bg: #fff9e6;
+            --line-gray: #e2e8f0;
+            --a4-width: 210mm;
+            --a4-height: 297mm;
+        }
+
+        * { box-sizing: border-box; -webkit-print-color-adjust: exact; }
+
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            background-color: #f1f5f9;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .page-container {
+            width: var(--a4-width);
+            height: var(--a4-height);
+            background: white;
+            padding: 15mm;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media print {
+            body { background: none; padding: 0; }
+            .page-container { box-shadow: none; }
+        }
+
+        /* 顶部标题栏 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10mm;
+        }
+
+        .title-group h1 {
+            font-size: 32pt;
+            margin: 0;
+            color: var(--relation-dark);
+            font-weight: 900;
+        }
+
+        .network-bar {
+            border: 1px solid var(--relation-gold);
+            border-radius: 8px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            margin-top: 5mm;
+            width: 350px;
+        }
+
+        .network-icon { color: var(--relation-gold); margin-right: 10px; font-size: 14pt; }
+        .network-text { font-weight: bold; color: var(--relation-dark); }
+
+        .rank-badge-container {
+            text-align: right;
+        }
+
+        .name-input {
+            border-bottom: 1px solid var(--relation-dark);
+            width: 200px;
+            display: inline-block;
+            margin-left: 10px;
+            height: 20px;
+        }
+
+        .rank-badge {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: 5mm;
+            font-weight: 900;
+            color: var(--relation-gold);
+            font-size: 28pt;
+        }
+
+        /* 关系卡片网格 */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8mm;
+            flex-grow: 1;
+        }
+
+        .relation-card {
+            border: 2px solid var(--relation-gold);
+            border-radius: 12pt;
+            padding: 10pt;
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+        }
+
+        .card-row-top {
+            display: flex;
+            background-color: var(--relation-bg);
+            border-bottom: 1px solid var(--relation-gold);
+            margin: -10pt -10pt 10pt -10pt;
+            padding: 5pt 10pt;
+            border-radius: 10pt 10pt 0 0;
+            font-size: 9pt;
+            font-weight: bold;
+            color: var(--relation-gold);
+        }
+
+        .label-name { width: 60%; }
+        .label-actor { width: 40%; }
+
+        .card-label-small {
+            font-size: 9pt;
+            font-weight: bold;
+            color: var(--relation-gold);
+            margin-bottom: 3mm;
+        }
+
+        /* 刻度尺样式 */
+        .scale-container {
+            display: flex;
+            flex-direction: column;
+            margin: 5mm 0;
+        }
+
+        .scale-numbers {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 5pt;
+            margin-bottom: 2pt;
+        }
+
+        .scale-numbers span {
+            font-size: 9pt;
+            font-weight: bold;
+            color: var(--relation-gold);
+            width: 12pt;
+            text-align: center;
+        }
+
+        .scale-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .scale-line::before {
+            content: "";
+            position: absolute;
+            left: 10pt;
+            right: 10pt;
+            height: 1.5pt;
+            background-color: var(--relation-gold);
+            z-index: 1;
+        }
+
+        .scale-dot {
+            width: 10pt;
+            height: 10pt;
+            border: 1.5pt solid var(--relation-gold);
+            background: white;
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .scale-arrow {
+            color: var(--relation-gold);
+            font-size: 10pt;
+            z-index: 2;
+        }
+
+        .scale-footer {
+            text-align: right;
+            font-size: 8pt;
+            font-weight: bold;
+            color: var(--relation-gold);
+            margin-top: 2pt;
+        }
+
+        /* 底部激活区 */
+        .card-footer {
+            margin-top: auto;
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+        }
+
+        .lines-area { flex-grow: 1; }
+        .line { border-bottom: 1pt solid var(--relation-gold); height: 7mm; width: 100%; }
+
+        .activate-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2pt;
+        }
+
+        .square {
+            width: 18pt;
+            height: 18pt;
+            border: 1.5pt solid var(--relation-gold);
+            border-radius: 4pt;
+        }
+
+        .activate-text {
+            font-size: 8pt;
+            font-weight: bold;
+            color: var(--relation-gold);
+            margin-top: 2pt;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <div class="header">
+        <div class="title-group">
+            <h1>关系</h1>
+            <div class="network-bar">
+                <span class="network-icon">🌐</span>
+                <span class="network-text">关系网内的关系</span>
+            </div>
+        </div>
+        <div class="rank-badge-container">
+            <div style="font-size: 10pt; color: #4a3701;">角色姓名<span class="name-input"></span></div>
+            <div class="rank-badge">
+                <span style="font-size: 45pt; margin-right: 10px;">R</span> 现实
+            </div>
+        </div>
+    </div>
+
+    <div class="cards-grid">
+        <script>
+            for (let i = 0; i < 6; i++) {
+                document.write(`
+                <div class="relation-card">
+                    <div class="card-row-top">
+                        <div class="label-name">姓名</div>
+                        <div class="label-actor">扮演者</div>
+                    </div>
+                    <div class="card-label-small">描述</div>
+                    <div style="border-bottom: 1pt solid var(--relation-gold); height: 15px;"></div>
+                    
+                    <div class="scale-container">
+                        <div class="scale-numbers">
+                            <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
+                        </div>
+                        <div class="scale-line">
+                            <span class="scale-arrow">▶</span>
+                            ${' <div class="scale-dot"></div> '.repeat(9)}
+                            <span class="scale-icon" style="color:var(--relation-gold); font-size:12pt; z-index:2; background:white;">🌐</span>
+                        </div>
+                        <div class="scale-footer">关系网内 ▲</div>
+                    </div>
+
+                    <div class="card-label-small" style="margin-bottom:0">连结加成</div>
+                    <div class="card-footer">
+                        <div class="lines-area">
+                            <div class="line"></div>
+                            <div class="line"></div>
+                        </div>
+                        <div class="activate-box">
+                            <div class="square"></div>
+                            <span class="activate-text">激活</span>
+                        </div>
+                    </div>
+                </div>
+                `);
+            }
+        </script>
+    </div>
+</div>
+
+</body>
+</html>

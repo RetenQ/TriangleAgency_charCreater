@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARC 角色卡 - 2026.01.30</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap');
+        body { font-family: 'Noto Sans SC', sans-serif; background-color: #f0f2f5; }
+        .arc-blue { color: #1a569d; }
+        .arc-yellow { color: #f3a81a; }
+        .arc-red { color: #c31e39; }
+        .border-arc-blue { border-color: #1a569d; }
+        .border-arc-yellow { border-color: #f3a81a; }
+        .border-arc-red { border-color: #c31e39; }
+        .triangle { width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 35px solid; display: inline-block; position: relative; }
+        .triangle span { position: absolute; top: 12px; left: -6px; color: white; font-weight: bold; font-size: 1.2rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; row-gap: 8px; }
+        .stat-box { width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 15px solid #e5e7eb; transform: rotate(180deg); }
+        .dashed-line { border-bottom: 1px dashed #e2e8f0; height: 2rem; width: 100%; }
+    </style>
+</head>
+<body class="p-8 flex justify-center">
+    <div class="w-[900px] min-h-[1100px] bg-white border shadow-2xl p-10 flex gap-12 relative">
+        
+        <div class="flex-1 flex flex-col">
+            <div class="flex gap-6 mb-8">
+                <div class="flex-1 space-y-4">
+                    <div class="border-b-2 border-slate-800 pb-1 font-bold h-10 flex items-end">角色姓名</div>
+                    <div class="border-b-2 border-slate-800 pb-1 font-bold h-10 flex items-end">机构头衔</div>
+                    <div class="border-b-2 border-slate-800 pb-1 font-bold h-10 flex items-end">机构评级</div>
+                </div>
+                <div class="w-32 h-40 border-2 border-slate-200 bg-slate-50 flex items-center justify-center text-slate-400">
+                    <span class="text-xs">角色头像</span>
+                </div>
+            </div>
+
+            <div class="space-y-4 mb-8">
+                <div class="text-2xl font-black arc-red">🏆 嘉奖</div>
+                <div class="text-2xl font-black arc-red">⚖️ 申诫</div>
+                <div class="text-2xl font-black arc-red">🔥 额外过载</div>
+            </div>
+
+            <div class="flex-1 flex flex-col gap-6">
+                <section class="border-l-4 border-arc-yellow pl-4 flex-1">
+                    <h3 class="arc-yellow font-black text-xl mb-2">▶ 现实触发器</h3>
+                    <div class="dashed-line"></div>
+                    <div class="dashed-line"></div>
+                </section>
+
+                <section class="border-l-4 border-arc-yellow pl-4 flex-1">
+                    <h3 class="arc-yellow font-black text-xl mb-2">▶ 过载解除</h3>
+                    <div class="dashed-line"></div>
+                    <div class="dashed-line"></div>
+                </section>
+
+                <section class="border-l-4 border-arc-red pl-4 flex-[1.5]">
+                    <h3 class="arc-red font-black text-xl mb-2">▶ 首要指令</h3>
+                    <p class="text-xs text-slate-400 mb-2 italic">如果你……，则获得1点申诫：</p>
+                    <div class="dashed-line"></div>
+                    <div class="dashed-line"></div>
+                    <div class="dashed-line"></div>
+                </section>
+
+                <section class="border-l-4 border-arc-red pl-4 flex-[2]">
+                    <h3 class="arc-red font-black text-xl mb-2">▶ 许可行为</h3>
+                    <p class="text-xs text-slate-400 mb-2">完成以下事项获得嘉奖：</p>
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2 font-bold arc-red">▷ <div class="dashed-line"></div></div>
+                        <div class="flex items-center gap-2 font-bold arc-red">▷ <div class="dashed-line"></div></div>
+                        <div class="flex items-center gap-2 font-bold arc-red">▷ <div class="dashed-line"></div></div>
+                        <div class="flex items-center gap-2 font-bold arc-red">▷ <div class="dashed-line"></div></div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <div class="w-72 flex flex-col">
+            <div class="space-y-4 mb-10">
+                <div class="flex items-center gap-4"><div class="triangle arc-blue"><span>A</span></div><div class="flex-1 border-b-2 border-arc-blue font-bold arc-blue">异常体</div></div>
+                <div class="flex items-center gap-4"><div class="triangle arc-yellow"><span>R</span></div><div class="flex-1 border-b-2 border-arc-yellow font-bold arc-yellow">现实</div></div>
+                <div class="flex items-center gap-4"><div class="triangle arc-red"><span>C</span></div><div class="flex-1 border-b-2 border-arc-red font-bold arc-red">职能</div></div>
+            </div>
+
+            <div class="relative flex-1">
+                <div class="flex justify-between items-start mb-6">
+                    <h2 class="text-3xl font-black leading-tight">资质<br>保证</h2>
+                    <div class="arc-red text-4xl">⚓</div>
+                </div>
+                <div class="space-y-5">
+                    <script>
+                        const stats = ["专注", "欺瞒", "活力", "共情", "主动", "坚毅", "气场", "专业", "诡秘"];
+                        stats.forEach(stat => {
+                            document.write(`
+                                <div class="flex items-start gap-2">
+                                    <div class="text-[8px] font-bold arc-red rotate-[-90deg] mt-1">MAX</div>
+                                    <div class="w-7 h-7 bg-red-50 rotate-45 border border-red-100 flex-shrink-0"></div>
+                                    <div class="flex-1">
+                                        <div class="text-xs font-bold mb-1">${stat}</div>
+                                        <div class="stats-grid">${'<div class="stat-box"></div>'.repeat(12)}</div>
+                                    </div>
+                                </div>
+                            `);
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

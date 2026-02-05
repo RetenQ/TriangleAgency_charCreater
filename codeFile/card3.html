@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>异常能力角色卡</title>
+    <style>
+        :root {
+            --primary-blue: #3b5091;
+            --light-blue: #eef2ff;
+            --fail-red: #d9534f;
+            --border-color: #cbd5e1;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background-color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            width: 800px;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            border-radius: 8px;
+        }
+
+        /* 顶部标题栏 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--primary-blue);
+            padding-bottom: 10px;
+        }
+
+        .title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #1e293b;
+        }
+
+        .character-info {
+            text-align: right;
+            color: var(--primary-blue);
+        }
+
+        .name-line {
+            border-bottom: 1px solid #64748b;
+            display: inline-block;
+            width: 200px;
+            margin-left: 10px;
+        }
+
+        .rank-badge {
+            font-size: 24px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* 能力卡片区块 */
+        .ability-card {
+            border: 2px solid var(--border-color);
+            border-radius: 15px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 150px;
+            background-color: var(--light-blue);
+            border-bottom: 1px solid var(--border-color);
+            padding: 5px 15px;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--primary-blue);
+        }
+
+        .card-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 15px;
+        }
+
+        /* 左侧成功区域 */
+        .success-side {
+            border-right: 1px solid #eee;
+            padding-right: 10px;
+        }
+
+        .success-title {
+            color: var(--primary-blue);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        /* 右侧失败与练习区域 */
+        .fail-side {
+            padding-left: 5px;
+        }
+
+        .fail-title {
+            color: var(--fail-red);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        /* 线条样式 */
+        .input-line {
+            border-bottom: 1px solid var(--primary-blue);
+            height: 25px;
+            margin-bottom: 8px;
+        }
+
+        .fail-line {
+            border-bottom: 1px solid var(--fail-red);
+            height: 25px;
+            margin-bottom: 8px;
+        }
+
+        /* 问答与练习区 */
+        .qa-section {
+            margin-top: 15px;
+            font-size: 13px;
+            color: var(--primary-blue);
+        }
+
+        .qa-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .qa-row input[type="text"] {
+            border: none;
+            border-bottom: 1px solid var(--primary-blue);
+            flex-grow: 1;
+            margin: 0 10px;
+            outline: none;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+        }
+
+        .square {
+            width: 14px;
+            height: 14px;
+            border: 1px solid var(--primary-blue);
+            display: inline-block;
+        }
+
+        .icon-star { color: var(--primary-blue); margin-right: 5px; }
+        .icon-x { color: var(--fail-red); margin-right: 5px; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="title">异常能力</div>
+        <div class="character-info">
+            <div>角色姓名<span class="name-line"></span></div>
+            <div class="rank-badge">
+                <span style="font-size: 40px;">A</span> 异常
+            </div>
+        </div>
+    </div>
+
+    <script>
+        for (let i = 0; i < 3; i++) {
+            document.write(`
+            <div class="ability-card">
+                <div class="card-header">
+                    <div>能力</div>
+                    <div>触发器</div>
+                    <div style="text-align:right">资质</div>
+                </div>
+                <div class="card-body">
+                    <div class="success-side">
+                        <div class="success-title">▲ 成功时， <div style="flex-grow:1; border-bottom:1px solid var(--primary-blue); margin-left:10px;"></div></div>
+                        <div class="input-line"></div>
+                        <div class="input-line"></div>
+                        <div style="display:flex; align-items:center; margin-top:20px;">
+                            <span class="icon-star">★</span> 
+                            <div style="background:#e2e8f0; width:80px; height:18px; border-radius:10px; margin-right:10px;"></div>,
+                            <div style="flex-grow:1; border-bottom:1px solid var(--primary-blue);"></div>
+                        </div>
+                        <div class="input-line"></div>
+                        <div class="input-line"></div>
+                    </div>
+                    
+                    <div class="fail-side">
+                        <div class="fail-title">✘ 失败时， <div style="flex-grow:1; border-bottom:1px solid var(--fail-red); margin-left:10px;"></div></div>
+                        <div class="fail-line"></div>
+                        <div class="fail-line"></div>
+                        
+                        <div class="qa-section">
+                            <div class="qa-row">
+                                问: <input type="text"> 
+                                <div class="checkbox-group">已练习? <div class="square"></div></div>
+                            </div>
+                            <div style="text-align:right; font-size:11px; margin-bottom:5px;">页码 # ________</div>
+                            <div class="qa-row">
+                                答: <input type="text"> ➔ <div class="square"></div> <div class="square"></div> <div class="square"></div>
+                            </div>
+                            <div class="qa-row">
+                                答: <input type="text"> ➔ <div class="square"></div> <div class="square"></div> <div class="square"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `);
+        }
+    </script>
+</div>
+
+</body>
+</html>

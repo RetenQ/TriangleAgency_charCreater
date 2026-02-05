@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>特工调查表 - 侧边栏补充版</title>
+    <style>
+        :root {
+            --agent-red: #b01a2e;
+            --agent-dark: #2d1b33;
+            --line-gray: #e2e8f0;
+            --a4-width: 210mm;
+            --a4-height: 297mm;
+        }
+
+        * { box-sizing: border-box; -webkit-print-color-adjust: exact; }
+
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            background-color: #f1f5f9;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .page-container {
+            width: var(--a4-width);
+            height: var(--a4-height);
+            background: white;
+            padding: 15mm;
+            display: grid;
+            grid-template-columns: 1fr 75mm; /* 稍微加宽右侧以容纳复杂问题 */
+            gap: 12mm;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        @media print {
+            body { background: none; padding: 0; }
+            .page-container { box-shadow: none; }
+        }
+
+        /* 标题部分 */
+        .header-section { grid-column: 1 / -1; margin-bottom: 8mm; }
+        h1 { font-size: 26pt; margin: 0; font-weight: 800; }
+        .subtitle { font-size: 10pt; color: #64748b; margin-top: 2mm; }
+
+        /* 通用问题样式 */
+        .question-block { margin-bottom: 6mm; }
+        .question-title {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            font-size: 11pt;
+            margin-bottom: 2mm;
+            line-height: 1.2;
+        }
+        .question-number {
+            background-color: var(--agent-red);
+            color: white;
+            width: 18pt;
+            height: 18pt;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8pt;
+            margin-right: 8pt;
+            flex-shrink: 0;
+        }
+        .line { border-bottom: 1pt solid var(--line-gray); height: 8mm; width: 100%; }
+        .answer-lines { margin-left: 26pt; }
+
+        /* 右侧面板 */
+        .side-panel { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 6mm; 
+        }
+
+        /* ID卡片样式 */
+        .id-card { border: 1px solid #e2e8f0; border-radius: 12pt; padding: 15pt; background: #fff; }
+        .photo-box { width: 100%; aspect-ratio: 1/1.1; background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 8pt; display: flex; align-items: center; justify-content: center; font-size: 20pt; }
+        .card-label { color: var(--agent-red); font-weight: bold; font-size: 8pt; margin-top: 8pt; }
+        .card-input { border-bottom: 1.2pt solid var(--agent-red); height: 18pt; margin-bottom: 2pt; }
+        .triangle-logo { font-weight: 900; color: var(--agent-red); font-size: 11pt; text-align: right; line-height: 0.9; margin-top: 10pt; }
+        
+        /* 紧急联系人区块 */
+        .emergency-box { border: 1.2pt solid #fee2e2; border-radius: 10pt; padding: 12pt; background: #fffafb; }
+        
+        /* 侧边栏问题缩放样式 (为了美观稍微缩小一点点) */
+        .side-panel .question-title { font-size: 10pt; }
+        .side-panel .answer-lines { margin-left: 0; margin-top: 2mm; }
+        .tag-icon { color: var(--agent-red); margin-right: 6pt; font-size: 12pt; }
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <div class="main-content">
+        <div class="header-section">
+            <h1>欢迎你，特工！</h1>
+            <p class="subtitle">请尽可能如实回答以下问题，以便机构和你的同事能更多地了解你。</p>
+        </div>
+
+        <div class="question-block">
+            <div class="question-title"><span class="question-number">0.A</span> 描述你的外貌</div>
+            <div class="answer-lines"><div class="line"></div><div class="line"></div><div class="line"></div></div>
+        </div>
+
+        <div class="question-block">
+            <div class="question-title"><span class="question-number">0.B</span> 描述你的性格</div>
+            <div class="answer-lines"><div class="line"></div><div class="line"></div><div class="line"></div></div>
+        </div>
+
+        <div class="question-block">
+            <div class="question-title"><span class="question-number">1</span> 你是如何与你的异常体接触的？</div>
+            <div class="answer-lines"><div class="line"></div><div class="line"></div><div class="line"></div></div>
+        </div>
+
+        <div class="question-block">
+            <div class="question-title"><span class="question-number">2</span> 机构是如何找到你的？</div>
+            <div class="answer-lines"><div class="line"></div><div class="line"></div><div class="line"></div></div>
+        </div>
+
+        <div class="question-block">
+            <div class="question-title"><span class="question-number">3</span> 你的能力有独特的外在视觉表现吗？</div>
+            <div class="answer-lines"><div class="line"></div><div class="line"></div></div>
+        </div>
+
+        <div class="question-block">
+            <div class="question-title"><span class="question-number">4</span> 你喝咖啡有什么偏好？</div>
+            <div class="answer-lines"><div class="line"></div></div>
+        </div>
+
+        <div class="question-block">
+            <div class="question-title"><span class="question-number">5</span> 请描述你过往的工作经历。</div>
+            <div class="answer-lines"><div class="line"></div><div class="line"></div></div>
+        </div>
+    </div>
+
+    <div class="side-panel">
+        <div class="id-card">
+            <div class="photo-box">📷</div>
+            <div class="card-label">姓名</div><div class="card-input"></div>
+            <div class="card-label">人称代词</div><div class="card-input"></div>
+            <div class="triangle-logo">TRIANGLE<br>AGENCY</div>
+        </div>
+
+        <div class="emergency-box">
+            <div class="card-label" style="margin-top:0">紧急联系人</div><div class="card-input"></div>
+            <div class="card-label">关系</div><div class="card-input"></div>
+        </div>
+
+        <div class="side-questions" style="margin-top: 5mm;">
+            <div class="question-block">
+                <div class="question-title"><span class="question-number">6</span> 你对办公套件的熟悉程度？</div>
+                <div class="answer-lines"><div class="line"></div></div>
+            </div>
+
+            <div class="question-block">
+                <div class="question-title"><span class="question-number">7</span> 协作中你能做出什么贡献？</div>
+                <div class="answer-lines"><div class="line"></div><div class="line"></div></div>
+            </div>
+
+            <div class="question-block">
+                <div class="question-title"><span class="tag-icon">🔖</span> 补充说明</div>
+                <div class="answer-lines"><div class="line"></div><div class="line"></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

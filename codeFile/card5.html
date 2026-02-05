@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>申领物与福利 - Triangle Agency</title>
+    <style>
+        :root {
+            --claim-red: #c1272d;
+            --claim-pink-bg: #fff1f2;
+            --claim-dark: #2d1b33;
+            --line-gray: #cbd5e1;
+            --a4-width: 210mm;
+            --a4-height: 297mm;
+        }
+
+        * { box-sizing: border-box; -webkit-print-color-adjust: exact; }
+
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            background-color: #f1f5f9;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .page-container {
+            width: var(--a4-width);
+            height: var(--a4-height);
+            background: white;
+            padding: 15mm 15mm;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media print {
+            body { background: none; padding: 0; }
+            .page-container { box-shadow: none; }
+        }
+
+        /* 顶部标题栏 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 8mm;
+            border-bottom: 2pt solid var(--claim-red);
+            padding-bottom: 2mm;
+        }
+
+        .title-area h1 {
+            font-size: 30pt;
+            margin: 0;
+            line-height: 1;
+            color: var(--claim-dark);
+            font-weight: 900;
+        }
+
+        .role-badge-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .name-line {
+            font-size: 10pt;
+            color: var(--claim-dark);
+            margin-bottom: 3mm;
+        }
+
+        .name-under {
+            display: inline-block;
+            border-bottom: 1pt solid var(--claim-dark);
+            width: 180px;
+            margin-left: 5px;
+            vertical-align: bottom;
+        }
+
+        .role-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .role-icon {
+            background-color: var(--claim-red);
+            color: white;
+            font-weight: 900;
+            font-size: 24pt;
+            width: 40pt;
+            height: 40pt;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            clip-path: polygon(50% 0%, 100% 100%, 0% 100%); /* 三角形标识 */
+            padding-top: 8pt;
+        }
+
+        .role-text {
+            color: var(--claim-red);
+            font-size: 20pt;
+            font-weight: 900;
+        }
+
+        /* 申领物卡片网格 */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6mm;
+            margin-top: 5mm;
+        }
+
+        .item-card {
+            border: 1.5pt solid #fecaca;
+            border-radius: 12pt;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            background-color: #fee2e2;
+            display: grid;
+            grid-template-columns: 1fr 1px 1fr;
+            padding: 6pt 10pt;
+            border-bottom: 1pt solid #fecaca;
+        }
+
+        .header-label {
+            font-size: 9pt;
+            font-weight: bold;
+            color: var(--claim-red);
+        }
+
+        .vertical-divider {
+            background-color: #fca5a5;
+            height: 100%;
+        }
+
+        .card-body {
+            padding: 8pt 12pt;
+            background-color: white;
+        }
+
+        .effect-label {
+            font-size: 9pt;
+            font-weight: bold;
+            color: var(--claim-red);
+            margin-bottom: 2mm;
+        }
+
+        .line {
+            border-bottom: 1pt solid var(--line-gray);
+            height: 7.5mm;
+            width: 100%;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <div class="header">
+        <div class="title-area">
+            <h1>申领物<br>与福利</h1>
+        </div>
+        <div class="role-badge-container">
+            <div class="name-line">角色姓名<span class="name-under"></span></div>
+            <div class="role-badge">
+                <div class="role-icon">C</div>
+                <div class="role-text">职能</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cards-grid">
+        <script>
+            for (let i = 0; i < 6; i++) {
+                document.write(`
+                <div class="item-card">
+                    <div class="card-header">
+                        <div class="header-label">姓名</div>
+                        <div class="vertical-divider"></div>
+                        <div class="header-label" style="padding-left:10px">页面/PD代码</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="effect-label">效果</div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                    </div>
+                </div>
+                `);
+            }
+        </script>
+    </div>
+</div>
+
+</body>
+</html>

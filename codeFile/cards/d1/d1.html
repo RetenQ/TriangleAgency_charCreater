@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARC 角色卡 - 完整版</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Microsoft+YaHei&display=swap');
+        @page { size: A4; margin: 0; }
+        body { 
+            font-family: 'Noto Sans SC', sans-serif; 
+            background-color: #f0f2f5; 
+            margin: 0; 
+            padding: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+        
+        /* 通用页面容器 */
+        .page-wrapper {
+            width: 210mm;
+            height: 297mm;
+            background-color: white;
+            position: relative;
+            box-sizing: border-box;
+            overflow: hidden;
+            page-break-after: always;
+        }
+        
+        .page-wrapper:last-child {
+            page-break-after: auto;
+        }
+
+        /* 第一页样式 (card1) */
+        .page-1 {
+            padding: 15mm;
+            display: flex;
+            gap: 10mm;
+        }
+        .arc-blue { color: #1a569d; }
+        .arc-yellow { color: #f3a81a; }
+        .arc-red { color: #c31e39; }
+        .border-arc-blue { border-color: #1a569d; }
+        .border-arc-yellow { border-color: #f3a81a; }
+        .border-arc-red { border-color: #c31e39; }
+        .triangle { width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 35px solid; display: inline-block; position: relative; }
+        .triangle span { position: absolute; top: 12px; left: -6px; color: white; font-weight: bold; font-size: 1.2rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 3px; row-gap: 6px; }
+        .stat-box { width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 16px solid #e5e7eb; transform: rotate(180deg); }
+        .stat-box-active { border-top-color: #c31e39; }
+        .dashed-line { border-bottom: 1px dashed #e2e8f0; height: 2rem; width: 100%; }
+
+        /* 第二页样式 (card2) */
+        .page-2 {
+            padding: 15mm;
+            display: grid;
+            grid-template-columns: 1fr 75mm;
+            gap: 12mm;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            --agent-red: #b01a2e;
+            --agent-dark: #2d1b33;
+            --line-gray: #e2e8f0;
+        }
+        .page-2 h1 { font-size: 26pt; margin: 0; font-weight: 800; }
+        .page-2 .subtitle { font-size: 10pt; color: #64748b; margin-top: 2mm; }
+        .page-2 .header-section { grid-column: 1 / -1; margin-bottom: 8mm; }
+        .page-2 .question-block { margin-bottom: 6mm; }
+        .page-2 .question-title { display: flex; align-items: center; font-weight: bold; font-size: 11pt; margin-bottom: 2mm; line-height: 1.2; }
+        .page-2 .question-number { background-color: var(--agent-red); color: white; width: 18pt; height: 18pt; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8pt; margin-right: 8pt; flex-shrink: 0; }
+        .page-2 .line { border-bottom: 1pt solid var(--line-gray); height: 8mm; width: 100%; }
+        .page-2 .answer-lines { margin-left: 26pt; }
+        .page-2 .side-panel { display: flex; flex-direction: column; gap: 6mm; }
+        .page-2 .id-card { border: 1px solid #e2e8f0; border-radius: 12pt; padding: 15pt; background: #fff; }
+        .page-2 .photo-box { width: 100%; aspect-ratio: 1/1.1; background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 8pt; display: flex; align-items: center; justify-content: center; font-size: 20pt; }
+        .page-2 .card-label { color: var(--agent-red); font-weight: bold; font-size: 8pt; margin-top: 8pt; }
+        .page-2 .card-input { border-bottom: 1.2pt solid var(--agent-red); height: 18pt; margin-bottom: 2pt; }
+        .page-2 .triangle-logo { font-weight: 900; color: var(--agent-red); font-size: 11pt; text-align: right; line-height: 0.9; margin-top: 10pt; }
+        .page-2 .emergency-box { border: 1.2pt solid #fee2e2; border-radius: 10pt; padding: 12pt; background: #fffafb; }
+        .page-2 .side-panel .question-title { font-size: 10pt; }
+        .page-2 .side-panel .answer-lines { margin-left: 0; margin-top: 2mm; }
+        .page-2 .tag-icon { color: var(--agent-red); margin-right: 6pt; font-size: 12pt; }
+
+        /* 第三页样式 (card3) */
+        .page-3 {
+            padding: 20px;
+            font-family: "Microsoft YaHei", sans-serif;
+            display: flex; /* 改回 flex */
+            justify-content: center; /* 水平居中 */
+            align-items: center; /* 垂直居中 */
+            --primary-blue: #3b5091;
+            --light-blue: #eef2ff;
+            --fail-red: #d9534f;
+            --border-color: #cbd5e1;
+        }
+        .page-3 .container {
+            width: 800px; /* 固定宽度 */
+            /* height: auto;  去掉 100% 高度，让内容自然撑开 */
+            background: white;
+            padding: 40px;
+            box-sizing: border-box;
+            border-radius: 8px; /* 加回圆角 */
+            /* box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); 可选：如果想要卡片感可以加阴影，但在 page-wrapper 里可能不需要 */
+        }
+        .page-3 .header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; border-bottom: 2px solid var(--primary-blue); padding-bottom: 10px; }
+        .page-3 .title { font-size: 36px; font-weight: bold; color: #1e293b; }
+        .page-3 .character-info { text-align: right; color: var(--primary-blue); }
+        .page-3 .name-line { border-bottom: 1px solid #64748b; display: inline-block; width: 200px; margin-left: 10px; }
+        .page-3 .rank-badge { font-size: 24px; font-weight: 900; display: flex; align-items: center; gap: 5px; }
+        .page-3 .ability-card { border: 2px solid var(--border-color); border-radius: 15px; margin-bottom: 25px; overflow: hidden; }
+        .page-3 .card-header { display: grid; grid-template-columns: 1fr 1fr 150px; background-color: var(--light-blue); border-bottom: 1px solid var(--border-color); padding: 5px 15px; font-size: 12px; font-weight: bold; color: var(--primary-blue); }
+        .page-3 .card-body { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 15px; }
+        .page-3 .success-side { border-right: 1px solid #eee; padding-right: 10px; }
+        .page-3 .success-title { color: var(--primary-blue); font-weight: bold; display: flex; align-items: center; margin-bottom: 10px; }
+        .page-3 .fail-side { padding-left: 5px; }
+        .page-3 .fail-title { color: var(--fail-red); font-weight: bold; display: flex; align-items: center; margin-bottom: 10px; }
+        .page-3 .input-line { border-bottom: 1px solid var(--primary-blue); height: 25px; margin-bottom: 8px; }
+        .page-3 .fail-line { border-bottom: 1px solid var(--fail-red); height: 25px; margin-bottom: 8px; }
+        .page-3 .qa-section { margin-top: 15px; font-size: 13px; color: var(--primary-blue); }
+        .page-3 .qa-row { display: flex; align-items: center; margin-bottom: 8px; }
+        .page-3 .qa-row input[type="text"] { border: none; border-bottom: 1px solid var(--primary-blue); flex-grow: 1; margin: 0 10px; outline: none; }
+        .page-3 .checkbox-group { display: flex; align-items: center; gap: 5px; font-size: 11px; }
+        .page-3 .square { width: 14px; height: 14px; border: 1px solid var(--primary-blue); display: inline-block; }
+        .page-3 .icon-star { color: var(--primary-blue); margin-right: 5px; }
+        .page-3 .icon-x { color: var(--fail-red); margin-right: 5px; }
+
+        /* 第四页样式 (card4) */
+        .page-4 {
+            padding: 15mm;
+            display: flex;
+            flex-direction: column;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            --relation-gold: #d4a017;
+            --relation-dark: #4a3701;
+            --relation-bg: #fff9e6;
+            --line-gray: #e2e8f0;
+        }
+        .page-4 .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10mm;
+        }
+        .page-4 .title-group h1 {
+            font-size: 32pt;
+            margin: 0;
+            color: var(--relation-dark);
+            font-weight: 900;
+        }
+        .page-4 .network-bar {
+            border: 1px solid var(--relation-gold);
+            border-radius: 8px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            margin-top: 5mm;
+            width: 350px;
+        }
+        .page-4 .network-icon { color: var(--relation-gold); margin-right: 10px; font-size: 14pt; }
+        .page-4 .network-text { font-weight: bold; color: var(--relation-dark); }
+        .page-4 .rank-badge-container { text-align: right; }
+        .page-4 .name-input {
+            border-bottom: 1px solid var(--relation-dark);
+            width: 200px;
+            display: inline-block;
+            margin-left: 10px;
+            height: 20px;
+        }
+        .page-4 .rank-badge {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: 5mm;
+            font-weight: 900;
+            color: var(--relation-gold);
+            font-size: 28pt;
+        }
+        .page-4 .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8mm;
+            flex-grow: 1;
+        }
+        .page-4 .relation-card {
+            border: 2px solid var(--relation-gold);
+            border-radius: 12pt;
+            padding: 10pt;
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+        }
+        .page-4 .card-row-top {
+            display: flex;
+            background-color: var(--relation-bg);
+            border-bottom: 1px solid var(--relation-gold);
+            margin: -10pt -10pt 10pt -10pt;
+            padding: 5pt 10pt;
+            border-radius: 10pt 10pt 0 0;
+            font-size: 9pt;
+            font-weight: bold;
+            color: var(--relation-gold);
+        }
+        .page-4 .label-name { width: 60%; }
+        .page-4 .label-actor { width: 40%; }
+        .page-4 .card-label-small {
+            font-size: 9pt;
+            font-weight: bold;
+            color: var(--relation-gold);
+            margin-bottom: 3mm;
+        }
+        .page-4 .scale-container {
+            display: flex;
+            flex-direction: column;
+            margin: 5mm 0;
+        }
+        .page-4 .scale-numbers {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 5pt;
+            margin-bottom: 2pt;
+        }
+        .page-4 .scale-numbers span {
+            font-size: 9pt;
+            font-weight: bold;
+            color: var(--relation-gold);
+            width: 12pt;
+            text-align: center;
+        }
+        .page-4 .scale-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+        .page-4 .scale-line::before {
+            content: "";
+            position: absolute;
+            left: 10pt;
+            right: 10pt;
+            height: 1.5pt;
+            background-color: var(--relation-gold);
+            z-index: 1;
+        }
+        .page-4 .scale-dot {
+            width: 10pt;
+            height: 10pt;
+            border: 1.5pt solid var(--relation-gold);
+            background: white;
+            border-radius: 50%;
+            z-index: 2;
+        }
+        .page-4 .scale-arrow {
+            color: var(--relation-gold);
+            font-size: 10pt;
+            z-index: 2;
+        }
+        .page-4 .scale-footer {
+            text-align: right;
+            font-size: 8pt;
+            font-weight: bold;
+            color: var(--relation-gold);
+            margin-top: 2pt;
+        }
+        .page-4 .card-footer {
+            margin-top: auto;
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+        }
+        .page-4 .lines-area { flex-grow: 1; }
+        .page-4 .line { border-bottom: 1pt solid var(--relation-gold); height: 7mm; width: 100%; }
+        .page-4 .activate-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2pt;
+        }
+        .page-4 .square {
+            width: 18pt;
+            height: 18pt;
+            border: 1.5pt solid var(--relation-gold);
+            border-radius: 4pt;
+        }
+        .page-4 .activate-text {
+            font-size: 8pt;
+            font-weight: bold;
+            color: var(--relation-gold);
+            margin-top: 2pt;
+        }
+
+        /* 第五页样式 (card5) */
+        .page-5 {
+            padding: 15mm;
+            display: flex;
+            flex-direction: column;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            --claim-red: #c1272d;
+            --claim-pink-bg: #fff1f2;
+            --claim-dark: #2d1b33;
+            --line-gray: #cbd5e1;
+        }
+        .page-5 .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 8mm;
+            border-bottom: 2pt solid var(--claim-red);
+            padding-bottom: 2mm;
+        }
+        .page-5 .title-area h1 {
+            font-size: 30pt;
+            margin: 0;
+            line-height: 1;
+            color: var(--claim-dark);
+            font-weight: 900;
+        }
+        .page-5 .role-badge-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        .page-5 .name-line {
+            font-size: 10pt;
+            color: var(--claim-dark);
+            margin-bottom: 3mm;
+        }
+        .page-5 .name-under {
+            display: inline-block;
+            border-bottom: 1pt solid var(--claim-dark);
+            width: 180px;
+            margin-left: 5px;
+            vertical-align: bottom;
+        }
+        .page-5 .role-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .page-5 .role-icon {
+            background-color: var(--claim-red);
+            color: white;
+            font-weight: 900;
+            font-size: 24pt;
+            width: 40pt;
+            height: 40pt;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+            padding-top: 8pt;
+        }
+        .page-5 .role-text {
+            color: var(--claim-red);
+            font-size: 20pt;
+            font-weight: 900;
+        }
+        .page-5 .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6mm;
+            margin-top: 5mm;
+        }
+        .page-5 .item-card {
+            border: 1.5pt solid #fecaca;
+            border-radius: 12pt;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .page-5 .card-header {
+            background-color: #fee2e2;
+            display: grid;
+            grid-template-columns: 1fr 1px 1fr;
+            padding: 6pt 10pt;
+            border-bottom: 1pt solid #fecaca;
+        }
+        .page-5 .header-label {
+            font-size: 9pt;
+            font-weight: bold;
+            color: var(--claim-red);
+        }
+        .page-5 .vertical-divider {
+            background-color: #fca5a5;
+            height: 100%;
+        }
+        .page-5 .card-body {
+            padding: 8pt 12pt;
+            background-color: white;
+        }
+        .page-5 .effect-label {
+            font-size: 9pt;
+            font-weight: bold;
+            color: var(--claim-red);
+            margin-bottom: 2mm;
+        }
+        .page-5 .line {
+            border-bottom: 1pt solid var(--line-gray);
+            height: 7.5mm;
+            width: 100%;
+        }
+
+        /* 打印优化 */
+        @media print {
+            body { background: none; }
+            .page-wrapper { box-shadow: none; margin: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 第一页: 原始角色卡 -->
+    <div class="page-wrapper page-1 shadow-2xl">
+        <div class="flex-1 flex flex-col">
+            <div class="flex gap-6 mb-8">
+                <div class="flex-[3] space-y-4">
+                    <div class="border-b-2 border-slate-800 pb-1 font-bold h-10 flex items-end justify-between">
+                        <span>d1</span>
+                        <span class="text-xs text-slate-400 font-normal">d</span>
+                    </div>
+                    <div class="border-b-2 border-slate-800 pb-1 font-bold h-10 flex items-end">2d1</div>
+                    <div class="border-b-2 border-slate-800 pb-1 font-bold h-10 flex items-end">d1</div>
+                </div>
+                <div class="flex-1 border-2 border-slate-200 bg-slate-50 flex items-center justify-center text-slate-400 overflow-hidden h-40">
+                    <!-- AVATAR_PLACEHOLDER -->
+                    <span class="text-xs">角色头像</span>
+                </div>
+            </div>
+
+            <div class="space-y-4 mb-8">
+                <div class="text-2xl font-black arc-red">🏆 嘉奖</div>
+                <div class="text-2xl font-black arc-red">⚖️ 申诫</div>
+                <div class="text-2xl font-black arc-red">🔥 额外过载</div>
+            </div>
+
+            <div class="flex-1 flex flex-col gap-6">
+                <section class="border-l-4 border-arc-yellow pl-4 flex-1">
+                    <h3 class="arc-yellow font-black text-xl mb-2">▶ 现实触发器</h3>
+                    <div class="text-sm leading-relaxed">需要关爱
+GM可以使用现实触发器，让你所照料的人需要你的关注。如果你忽视了，你所照料的人现在会大发脾气，并在之后占用你的时间：与你所照料的人情谊最淡的那段人际关系会失去一点连结。
+如果你让你所照料的人自己解决问题、任由他们受到伤害，或将他们置于任何他人的监管之下，你与他们的关系会受损。在一条四格的“独立”条上标记下一个空格。当所有格子都被标记后再次发生这种情况，或他们成长到你无法控制时，你所照料的人便不再依赖你。你必须选择一个新的现实。</div>
+                </section>
+
+                <section class="border-l-4 border-arc-yellow pl-4 flex-1">
+                    <h3 class="arc-yellow font-black text-xl mb-2">▶ 过载解除</h3>
+                    <div class="text-sm leading-relaxed">这是你的最爱！
+当你做某件能让你所照料的人开心的事时，忽视所有过载。</div>
+                </section>
+
+                <section class="border-l-4 border-arc-red pl-4 flex-[1.5]">
+                    <h3 class="arc-red font-black text-xl mb-2">▶ 首要指令</h3>
+                    <p class="text-xs text-slate-400 mb-2 italic">如果你……，则获得1点申诫：</p>
+                    <div class="text-sm leading-relaxed">保持气氛新鲜：每当你正确地说出某人的名字时，记 1 次申诫。</div>
+                </section>
+
+                <section class="border-l-4 border-arc-red pl-4 flex-[2]">
+                    <h3 class="arc-red font-black text-xl mb-2">▶ 许可行为</h3>
+                    <p class="text-xs text-slate-400 mb-2">完成以下事项获得嘉奖：</p>
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2 font-bold arc-red">▷ <div class="flex-1 border-b border-dashed border-red-200 text-sm font-normal text-black">让某人感到宾至如归。</div></div>
+                        <div class="flex items-center gap-2 font-bold arc-red">▷ <div class="flex-1 border-b border-dashed border-red-200 text-sm font-normal text-black">炫耀你的专业知识。</div></div>
+                        <div class="flex items-center gap-2 font-bold arc-red">▷ <div class="flex-1 border-b border-dashed border-red-200 text-sm font-normal text-black">让血液流动起来。</div></div>
+                        <div class="flex items-center gap-2 font-bold arc-red">▷ <div class="flex-1 border-b border-dashed border-red-200 text-sm font-normal text-black"></div></div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <div class="w-72 flex flex-col">
+            <div class="space-y-4 mb-10">
+                <div class="flex items-center gap-4"><div class="triangle arc-blue"><span>A</span></div><div class="flex-1 border-b-2 border-arc-blue font-bold arc-blue">低语</div></div>
+                <div class="flex items-center gap-4"><div class="triangle arc-yellow"><span>R</span></div><div class="flex-1 border-b-2 border-arc-yellow font-bold arc-yellow">看护者-婴儿</div></div>
+                <div class="flex items-center gap-4"><div class="triangle arc-red"><span>C</span></div><div class="flex-1 border-b-2 border-arc-red font-bold arc-red">咖啡师</div></div>
+            </div>
+
+            <div class="relative flex-1">
+                <div class="flex justify-between items-start mb-6">
+                    <h2 class="text-3xl font-black leading-tight">资质保证</h2>
+                    <div class="arc-red text-4xl">⚓</div>
+                </div>
+                <div class="space-y-5">
+                    <div class="flex items-start gap-2 stat-row" data-max="0">
+                        <div class="text-[9px] font-bold arc-red rotate-[-90deg] mt-1.5">MAX</div>
+                        <div class="w-8 h-8 bg-red-50 rotate-45 border border-red-100 flex-shrink-0 relative">
+                            <div class="absolute inset-0 flex items-center justify-center -rotate-45 text-xs font-bold">0</div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-bold mb-1">专注</div>
+                            <div class="stats-grid">
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2 stat-row" data-max="0">
+                        <div class="text-[9px] font-bold arc-red rotate-[-90deg] mt-1.5">MAX</div>
+                        <div class="w-8 h-8 bg-red-50 rotate-45 border border-red-100 flex-shrink-0 relative">
+                            <div class="absolute inset-0 flex items-center justify-center -rotate-45 text-xs font-bold">0</div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-bold mb-1">欺瞒</div>
+                            <div class="stats-grid">
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2 stat-row" data-max="0">
+                        <div class="text-[9px] font-bold arc-red rotate-[-90deg] mt-1.5">MAX</div>
+                        <div class="w-8 h-8 bg-red-50 rotate-45 border border-red-100 flex-shrink-0 relative">
+                            <div class="absolute inset-0 flex items-center justify-center -rotate-45 text-xs font-bold">0</div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-bold mb-1">活力</div>
+                            <div class="stats-grid">
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2 stat-row" data-max="0">
+                        <div class="text-[9px] font-bold arc-red rotate-[-90deg] mt-1.5">MAX</div>
+                        <div class="w-8 h-8 bg-red-50 rotate-45 border border-red-100 flex-shrink-0 relative">
+                            <div class="absolute inset-0 flex items-center justify-center -rotate-45 text-xs font-bold">0</div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-bold mb-1">共情</div>
+                            <div class="stats-grid">
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2 stat-row" data-max="0">
+                        <div class="text-[9px] font-bold arc-red rotate-[-90deg] mt-1.5">MAX</div>
+                        <div class="w-8 h-8 bg-red-50 rotate-45 border border-red-100 flex-shrink-0 relative">
+                            <div class="absolute inset-0 flex items-center justify-center -rotate-45 text-xs font-bold">0</div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-bold mb-1">主动</div>
+                            <div class="stats-grid">
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2 stat-row" data-max="0">
+                        <div class="text-[9px] font-bold arc-red rotate-[-90deg] mt-1.5">MAX</div>
+                        <div class="w-8 h-8 bg-red-50 rotate-45 border border-red-100 flex-shrink-0 relative">
+                            <div class="absolute inset-0 flex items-center justify-center -rotate-45 text-xs font-bold">0</div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-bold mb-1">坚毅</div>
+                            <div class="stats-grid">
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2 stat-row" data-max="0">
+                        <div class="text-[9px] font-bold arc-red rotate-[-90deg] mt-1.5">MAX</div>
+                        <div class="w-8 h-8 bg-red-50 rotate-45 border border-red-100 flex-shrink-0 relative">
+                            <div class="absolute inset-0 flex items-center justify-center -rotate-45 text-xs font-bold">0</div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-bold mb-1">气场</div>
+                            <div class="stats-grid">
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2 stat-row" data-max="0">
+                        <div class="text-[9px] font-bold arc-red rotate-[-90deg] mt-1.5">MAX</div>
+                        <div class="w-8 h-8 bg-red-50 rotate-45 border border-red-100 flex-shrink-0 relative">
+                            <div class="absolute inset-0 flex items-center justify-center -rotate-45 text-xs font-bold">0</div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-bold mb-1">专业</div>
+                            <div class="stats-grid">
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2 stat-row" data-max="0">
+                        <div class="text-[9px] font-bold arc-red rotate-[-90deg] mt-1.5">MAX</div>
+                        <div class="w-8 h-8 bg-red-50 rotate-45 border border-red-100 flex-shrink-0 relative">
+                            <div class="absolute inset-0 flex items-center justify-center -rotate-45 text-xs font-bold">0</div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-bold mb-1">诡秘</div>
+                            <div class="stats-grid">
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第二页: 特工调查表 -->
+    <div class="page-wrapper page-2 shadow-2xl">
+        <div class="main-content">
+            <div class="header-section">
+                <h1>欢迎你，特工！</h1>
+                <p class="subtitle">请尽可能如实回答以下问题，以便机构和你的同事能更多地了解你。</p>
+            </div>
+
+            <div class="question-block">
+                <div class="question-title"><span class="question-number">0.A</span> 描述你的外貌</div>
+                <div class="answer-lines"><div class="line"></div><div class="line"></div><div class="line"></div></div>
+            </div>
+
+            <div class="question-block">
+                <div class="question-title"><span class="question-number">0.B</span> 描述你的性格</div>
+                <div class="answer-lines"><div class="line"></div><div class="line"></div><div class="line"></div></div>
+            </div>
+
+            <div class="question-block">
+                <div class="question-title"><span class="question-number">1</span> 你是如何与你的异常体接触的？</div>
+                <div class="answer-lines"><div class="line"></div><div class="line"></div><div class="line"></div></div>
+            </div>
+
+            <div class="question-block">
+                <div class="question-title"><span class="question-number">2</span> 机构是如何找到你的？</div>
+                <div class="answer-lines"><div class="line"></div><div class="line"></div><div class="line"></div></div>
+            </div>
+
+            <div class="question-block">
+                <div class="question-title"><span class="question-number">3</span> 你的能力有独特的外在视觉表现吗？</div>
+                <div class="answer-lines"><div class="line"></div><div class="line"></div></div>
+            </div>
+
+            <div class="question-block">
+                <div class="question-title"><span class="question-number">4</span> 你喝咖啡有什么偏好？</div>
+                <div class="answer-lines"><div class="line"></div></div>
+            </div>
+
+            <div class="question-block">
+                <div class="question-title"><span class="question-number">5</span> 请描述你过往的工作经历。</div>
+                <div class="answer-lines"><div class="line"></div><div class="line"></div></div>
+            </div>
+        </div>
+
+        <div class="side-panel">
+            <div class="id-card">
+                <div class="photo-box">
+                    <!-- AVATAR_PLACEHOLDER -->
+                </div>
+                <div class="card-label">姓名</div><div class="card-input" style="font-size:12px; line-height:18px;">d1</div>
+                <div class="card-label">人称代词</div><div class="card-input" style="font-size:12px; line-height:18px;">d</div>
+                <div class="triangle-logo">TRIANGLE<br>AGENCY</div>
+            </div>
+
+            <div class="emergency-box">
+                <div class="card-label" style="margin-top:0">紧急联系人</div><div class="card-input"></div>
+                <div class="card-label">关系</div><div class="card-input"></div>
+            </div>
+
+            <div class="side-questions" style="margin-top: 5mm;">
+                <div class="question-block">
+                    <div class="question-title"><span class="question-number">6</span> 你对办公套件的熟悉程度？</div>
+                    <div class="answer-lines"><div class="line"></div></div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-title"><span class="question-number">7</span> 协作中你能做出什么贡献？</div>
+                    <div class="answer-lines"><div class="line"></div><div class="line"></div></div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-title"><span class="tag-icon">🔖</span> 补充说明</div>
+                    <div class="answer-lines"><div class="line"></div><div class="line"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第三页: 异常能力 -->
+    <div class="page-wrapper page-3 shadow-2xl">
+        <div class="container">
+            <div class="header">
+                <div class="title">异常能力</div>
+                <div class="character-info">
+                    <div>角色姓名<span class="name-line">d1</span></div>
+                    <div class="rank-badge">
+                        <span style="font-size: 40px;">d1</span> 异常
+                    </div>
+                </div>
+            </div>
+
+            <!-- 循环 3 次生成能力卡片 (静态写死或之后用脚本) -->
+            <div class="ability-card">
+                <div class="card-header">
+                    <div>能力</div>
+                    <div>触发器</div>
+                    <div style="text-align:right">资质</div>
+                </div>
+                <div class="card-body">
+                    <div class="success-side">
+                        <div class="success-title">▲ 成功时， <div style="flex-grow:1; border-bottom:1px solid var(--primary-blue); margin-left:10px;"></div></div>
+                        <div class="input-line"></div>
+                        <div class="input-line"></div>
+                        <div style="display:flex; align-items:center; margin-top:20px;">
+                            <span class="icon-star">★</span> 
+                            <div style="background:#e2e8f0; width:80px; height:18px; border-radius:10px; margin-right:10px;"></div>,
+                            <div style="flex-grow:1; border-bottom:1px solid var(--primary-blue);"></div>
+                        </div>
+                        <div class="input-line"></div>
+                        <div class="input-line"></div>
+                    </div>
+                    
+                    <div class="fail-side">
+                        <div class="fail-title">✘ 失败时， <div style="flex-grow:1; border-bottom:1px solid var(--fail-red); margin-left:10px;"></div></div>
+                        <div class="fail-line"></div>
+                        <div class="fail-line"></div>
+                        
+                        <div class="qa-section">
+                            <div class="qa-row">
+                                问: <input type="text"> 
+                                <div class="checkbox-group">已练习? <div class="square"></div></div>
+                            </div>
+                            <div style="text-align:right; font-size:11px; margin-bottom:5px;">页码 # ________</div>
+                            <div class="qa-row">
+                                答: <input type="text"> ➔ <div class="square"></div> <div class="square"></div> <div class="square"></div>
+                            </div>
+                            <div class="qa-row">
+                                答: <input type="text"> ➔ <div class="square"></div> <div class="square"></div> <div class="square"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ability-card">
+                <div class="card-header">
+                    <div>能力</div>
+                    <div>触发器</div>
+                    <div style="text-align:right">资质</div>
+                </div>
+                <div class="card-body">
+                    <div class="success-side">
+                        <div class="success-title">▲ 成功时， <div style="flex-grow:1; border-bottom:1px solid var(--primary-blue); margin-left:10px;"></div></div>
+                        <div class="input-line"></div>
+                        <div class="input-line"></div>
+                        <div style="display:flex; align-items:center; margin-top:20px;">
+                            <span class="icon-star">★</span> 
+                            <div style="background:#e2e8f0; width:80px; height:18px; border-radius:10px; margin-right:10px;"></div>,
+                            <div style="flex-grow:1; border-bottom:1px solid var(--primary-blue);"></div>
+                        </div>
+                        <div class="input-line"></div>
+                        <div class="input-line"></div>
+                    </div>
+                    
+                    <div class="fail-side">
+                        <div class="fail-title">✘ 失败时， <div style="flex-grow:1; border-bottom:1px solid var(--fail-red); margin-left:10px;"></div></div>
+                        <div class="fail-line"></div>
+                        <div class="fail-line"></div>
+                        
+                        <div class="qa-section">
+                            <div class="qa-row">
+                                问: <input type="text"> 
+                                <div class="checkbox-group">已练习? <div class="square"></div></div>
+                            </div>
+                            <div style="text-align:right; font-size:11px; margin-bottom:5px;">页码 # ________</div>
+                            <div class="qa-row">
+                                答: <input type="text"> ➔ <div class="square"></div> <div class="square"></div> <div class="square"></div>
+                            </div>
+                            <div class="qa-row">
+                                答: <input type="text"> ➔ <div class="square"></div> <div class="square"></div> <div class="square"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ability-card">
+                <div class="card-header">
+                    <div>能力</div>
+                    <div>触发器</div>
+                    <div style="text-align:right">资质</div>
+                </div>
+                <div class="card-body">
+                    <div class="success-side">
+                        <div class="success-title">▲ 成功时， <div style="flex-grow:1; border-bottom:1px solid var(--primary-blue); margin-left:10px;"></div></div>
+                        <div class="input-line"></div>
+                        <div class="input-line"></div>
+                        <div style="display:flex; align-items:center; margin-top:20px;">
+                            <span class="icon-star">★</span> 
+                            <div style="background:#e2e8f0; width:80px; height:18px; border-radius:10px; margin-right:10px;"></div>,
+                            <div style="flex-grow:1; border-bottom:1px solid var(--primary-blue);"></div>
+                        </div>
+                        <div class="input-line"></div>
+                        <div class="input-line"></div>
+                    </div>
+                    
+                    <div class="fail-side">
+                        <div class="fail-title">✘ 失败时， <div style="flex-grow:1; border-bottom:1px solid var(--fail-red); margin-left:10px;"></div></div>
+                        <div class="fail-line"></div>
+                        <div class="fail-line"></div>
+                        
+                        <div class="qa-section">
+                            <div class="qa-row">
+                                问: <input type="text"> 
+                                <div class="checkbox-group">已练习? <div class="square"></div></div>
+                            </div>
+                            <div style="text-align:right; font-size:11px; margin-bottom:5px;">页码 # ________</div>
+                            <div class="qa-row">
+                                答: <input type="text"> ➔ <div class="square"></div> <div class="square"></div> <div class="square"></div>
+                            </div>
+                            <div class="qa-row">
+                                答: <input type="text"> ➔ <div class="square"></div> <div class="square"></div> <div class="square"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 第四页: 角色关系网 -->
+    <div class="page-wrapper page-4 shadow-2xl">
+        <div class="header">
+            <div class="title-group">
+                <h1>关系</h1>
+                <div class="network-bar">
+                    <span class="network-icon">🌐</span>
+                    <span class="network-text">关系网内的关系</span>
+                </div>
+            </div>
+            <div class="rank-badge-container">
+                <div style="font-size: 10pt; color: #4a3701;">角色姓名<span class="name-input">d1</span></div>
+                <div class="rank-badge">
+                    <span style="font-size: 45pt; margin-right: 10px;">R</span> 现实
+                </div>
+            </div>
+        </div>
+
+        <div class="cards-grid" id="page-4-grid"></div>
+    </div>
+
+    <!-- 第五页: 申领物与福利 -->
+    <div class="page-wrapper page-5 shadow-2xl">
+        <div class="header">
+            <div class="title-area">
+                <h1>申领物<br>与福利</h1>
+            </div>
+            <div class="role-badge-container">
+                <div class="name-line">角色姓名<span class="name-under">d1</span></div>
+                <div class="role-badge">
+                    <div class="role-icon">C</div>
+                    <div class="role-text">职能</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cards-grid" id="page-5-grid"></div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var rows = document.querySelectorAll(".stat-row");
+            rows.forEach(function (row) {
+                var maxAttr = row.getAttribute("data-max") || "";
+                var max = parseInt(maxAttr, 10);
+                if (isNaN(max) || max <= 0) {
+                    return;
+                }
+                var boxes = row.querySelectorAll(".stats-grid .stat-box");
+                boxes.forEach(function (box, index) {
+                    if (index < max) {
+                        box.classList.add("stat-box-active");
+                    } else {
+                        box.classList.remove("stat-box-active");
+                    }
+                });
+            });
+
+            // Page 4 generation
+            const page4Grid = document.getElementById('page-4-grid');
+            if (page4Grid) {
+                let html = '';
+                for (let i = 0; i < 6; i++) {
+                    html += `
+                    <div class="relation-card">
+                        <div class="card-row-top">
+                            <div class="label-name">姓名</div>
+                            <div class="label-actor">扮演者</div>
+                        </div>
+                        <div class="card-label-small">描述</div>
+                        <div style="border-bottom: 1pt solid var(--relation-gold); height: 15px;"></div>
+                        
+                        <div class="scale-container">
+                            <div class="scale-numbers">
+                                <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
+                            </div>
+                            <div class="scale-line">
+                                <span class="scale-arrow">▶</span>
+                                ${' <div class="scale-dot"></div> '.repeat(9)}
+                                <span class="scale-icon" style="color:var(--relation-gold); font-size:12pt; z-index:2; background:white;">🌐</span>
+                            </div>
+                            <div class="scale-footer">关系网内 ▲</div>
+                        </div>
+
+                        <div class="card-label-small" style="margin-bottom:0">连结加成</div>
+                        <div class="card-footer">
+                            <div class="lines-area">
+                                <div class="line"></div>
+                                <div class="line"></div>
+                            </div>
+                            <div class="activate-box">
+                                <div class="square"></div>
+                                <span class="activate-text">激活</span>
+                            </div>
+                        </div>
+                    </div>`;
+                }
+                page4Grid.innerHTML = html;
+            }
+
+            // Page 5 generation
+            const page5Grid = document.getElementById('page-5-grid');
+            if (page5Grid) {
+                let html = '';
+                for (let i = 0; i < 6; i++) {
+                    html += `
+                    <div class="item-card">
+                        <div class="card-header">
+                            <div class="header-label">姓名</div>
+                            <div class="vertical-divider"></div>
+                            <div class="header-label" style="padding-left:10px">页面/PD代码</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="effect-label">效果</div>
+                            <div class="line"></div>
+                            <div class="line"></div>
+                            <div class="line"></div>
+                            <div class="line"></div>
+                            <div class="line"></div>
+                            <div class="line"></div>
+                        </div>
+                    </div>`;
+                }
+                page5Grid.innerHTML = html;
+            }
+        });
+    </script>
+</body>
+</html>
