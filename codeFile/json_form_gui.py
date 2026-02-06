@@ -12,8 +12,25 @@ except ImportError:
     sys.path.append(os.path.dirname(__file__))
     import json_to_html
 
-CARDS_DIR = r"e:\三角Allin\codeFile\cards"
-EDGE_PATH = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+CARDS_DIR = ""  # Will be set dynamically
+EDGE_PATH = ""  # Will be set dynamically
+
+def find_edge_path():
+    possible_paths = [
+        r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+        r"C:\Program Files\Microsoft\Edge\Application\msedge.exe",
+    ]
+    for path in possible_paths:
+        if os.path.exists(path):
+            return path
+    # Try finding in PATH
+    import shutil
+    path = shutil.which("msedge")
+    if path:
+        return path
+    return None
+
+EDGE_PATH = find_edge_path()
 
 # Determine paths based on run environment (Frozen/Dev)
 if getattr(sys, 'frozen', False):
@@ -77,8 +94,8 @@ def html_to_pdf(html_path: str, pdf_path: str):
     """
     Convert HTML to PDF using Microsoft Edge in headless mode.
     """
-    if not os.path.exists(EDGE_PATH):
-        raise FileNotFoundError(f"Microsoft Edge not found at: {EDGE_PATH}")
+    if not EDGE_PATH or not os.path.exists(EDGE_PATH):
+        raise FileNotFoundError(f"Microsoft Edge not found. Please install Edge or check path.")
 
     # Edge arguments for headless printing
     # Note: Paths must be absolute.
@@ -540,7 +557,7 @@ def main():
         if img_path:
             data["图片路径"] = img_path
             
-        for key, label, kind in form_config:
+        for key, label, kind, _ in form_config:
             w = widgets[key]
             if key == "异常体":
                 if isinstance(w, tk.StringVar):
@@ -590,7 +607,7 @@ def main():
         
         setting_from_data = True
         try:
-            for key, label, kind in form_config:
+            for key, label, kind, _ in form_config:
                 w = widgets[key]
                 val = data.get(key, "")
                 if key == "异常体":
@@ -715,6 +732,38 @@ def main():
     tk.Button(btn_frame, text="📂 打开 (Load)", command=load_card, width=15, height=2).pack(side="left", padx=10)
     tk.Button(btn_frame, text="💾 保存并生成 (Save & Sync)", command=save_and_generate, width=25, height=2, bg="#dddddd").pack(side="left", padx=10)
     tk.Button(btn_frame, text="退出 (Exit)", command=root.destroy, width=15, height=2).pack(side="left", padx=10)
+
+    # Console Output Area
+    console_frame = tk.Frame(btn_frame)
+    console_frame.pack(side="left", fill="both", expand=True, padx=10)
+    
+    tk.Label(console_frame, text="日志输出 (Log)", anchor="w").pack(fill="x")
+    
+    from tkinter.scrolledtext import ScrolledText
+    log_widget = ScrolledText(console_frame, height=5, state="disabled", font=("Consolas", 9))
+    log_widget.pack(fill="both", expand=True)
+
+    class ConsoleRedirector:
+        def __init__(self, widget):
+            self.widget = widget
+
+        def write(self, s):
+            try:
+                self.widget.configure(state="normal")
+                self.widget.insert("end", s)
+                self.widget.see("end")
+                self.widget.configure(state="disabled")
+                self.widget.update_idletasks()
+            except Exception:
+                pass
+            
+        def flush(self):
+            pass
+
+    sys.stdout = ConsoleRedirector(log_widget)
+    sys.stderr = ConsoleRedirector(log_widget)
+
+    print("系统已启动。等待操作...")
 
     root.mainloop()
 
