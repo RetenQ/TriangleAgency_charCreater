@@ -44,7 +44,7 @@
 
 机构允许特工根据任务需求调整终端参数。
 
-**数据库覆写**: 若需更新异常体或能力数据，请直接编辑 `ARC_setting` 目录下的 JSON 配置文件（如 `Anomaly.json`）。重启终端后，新数据将立即生效。同理，也可以编辑“现实”和“职能”的部分。具体格式请参考TrianglgAgency_charCreater\ARC_setting\README.MD的说明。
+数据库覆写: 若需更新异常体或能力数据，请直接编辑 `ARC_setting` 目录下的 JSON 配置文件（如 `Anomaly.json`）。重启终端后，新数据将立即生效。同理，也可以编辑“现实”和“职能”的部分。具体格式请参考TrianglgAgency_charCreater\ARC_setting\README.MD的说明。
 ---
 
 ## 📝 操作指南 (Operational Guide)
