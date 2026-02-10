@@ -1,4 +1,5 @@
-# Add your Python dependencies here, one per line.
-# The following libraries are detected as potential dependencies based on your environment:
+# Requirements for Triangle Agency Character Creator
+# ----------------------------------------------------
 
+# PyInstaller: Used to bundle the application into a standalone .exe
 pyinstaller
