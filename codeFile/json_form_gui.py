@@ -17,22 +17,33 @@ except ImportError:
 CARDS_DIR = ""  # Will be set dynamically
 EDGE_PATH = ""  # Will be set dynamically
 
-def find_edge_path():
+def find_browser_path():
+    """Finds a suitable Chromium-based browser (Edge or Chrome)."""
     possible_paths = [
+        # Edge
         r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
         r"C:\Program Files\Microsoft\Edge\Application\msedge.exe",
+        os.path.expanduser(r"~\AppData\Local\Microsoft\Edge\Application\msedge.exe"),
+        # Chrome
+        r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+        r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+        os.path.expanduser(r"~\AppData\Local\Google\Chrome\Application\chrome.exe"),
     ]
+    
     for path in possible_paths:
         if os.path.exists(path):
             return path
+            
     # Try finding in PATH
     import shutil
-    path = shutil.which("msedge")
-    if path:
-        return path
+    for binary in ["msedge", "chrome", "google-chrome"]:
+        path = shutil.which(binary)
+        if path:
+            return path
+            
     return None
 
-EDGE_PATH = find_edge_path()
+BROWSER_PATH = find_browser_path()
 
 # Determine paths based on run environment (Frozen/Dev)
 if getattr(sys, 'frozen', False):
@@ -96,15 +107,15 @@ def safe_filename_part(value: str, fallback: str, max_len: int = 50) -> str:
 
 def html_to_pdf(html_path: str, pdf_path: str):
     """
-    Convert HTML to PDF using Microsoft Edge in headless mode.
+    Convert HTML to PDF using a Chromium-based browser (Edge or Chrome) in headless mode.
     """
-    if not EDGE_PATH or not os.path.exists(EDGE_PATH):
-        raise FileNotFoundError(f"Microsoft Edge not found. Please install Edge or check path.")
+    if not BROWSER_PATH or not os.path.exists(BROWSER_PATH):
+        raise FileNotFoundError(f"No compatible browser (Edge/Chrome) found. Please install one.")
 
-    # Edge arguments for headless printing
+    # Browser arguments for headless printing
     # Note: Paths must be absolute.
     cmd = [
-        EDGE_PATH,
+        BROWSER_PATH,
         "--headless",
         "--disable-gpu",
         f"--print-to-pdf={pdf_path}",
@@ -113,10 +124,10 @@ def html_to_pdf(html_path: str, pdf_path: str):
     
     # Run the command
     try:
-        # Edge might print logs to stderr/stdout, we capture them to keep console clean
+        # Browser might print logs to stderr/stdout, we capture them to keep console clean
         subprocess.run(cmd, check=True, capture_output=True)
     except subprocess.CalledProcessError as e:
-        print(f"Edge PDF conversion failed: {e.stderr.decode()}")
+        print(f"PDF conversion failed: {e.stderr.decode()}")
         raise e
 
 def main():
