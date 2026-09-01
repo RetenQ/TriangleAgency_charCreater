@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARC 角色卡 - 完整版</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Microsoft+YaHei&display=swap');
+        @page { size: A4; margin: 0; }
+        body { 
+            font-family: 'Noto Sans SC', sans-serif; 
+            background-color: #f0f2f5; 
+            margin: 0; 
+            padding: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+        
+        /* 通用页面容器 */
+        .page-wrapper {
+            width: 210mm;
+            height: 297mm;
+            background-color: white;
+            position: relative;
+            box-sizing: border-box;
+            overflow: hidden;
+            page-break-after: always;
+        }
+        
+        .page-wrapper:last-child {
+            page-break-after: auto;
+        }
+
+        /* 第一页样式 (card1) */
+        .page-1 {
+            padding: 15mm;
+            display: flex;
+            gap: 10mm;
+        }
+        .arc-blue { color: #1a569d; }
+        .arc-yellow { color: #f3a81a; }
+        .arc-red { color: #c31e39; }
+        .border-arc-blue { border-color: #1a569d; }
+        .border-arc-yellow { border-color: #f3a81a; }
+        .border-arc-red { border-color: #c31e39; }
+        .triangle { width: 0; height: 0; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 35px solid; display: inline-block; position: relative; }
+        .triangle span { position: absolute; top: 12px; left: -6px; color: white; font-weight: bold; font-size: 1.2rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 3px; row-gap: 6px; }
+        .stat-box { width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 16px solid #e5e7eb; transform: rotate(180deg); }
+        .stat-box-active { border-top-color: #c31e39; }
+        .dashed-line { border-bottom: 1px dashed #e2e8f0; height: 2rem; width: 100%; }
+
+        /* 第二页样式 (card2) */
+        .page-2 {
+            padding: 15mm;
+            display: grid;
+            grid-template-columns: 1fr 75mm;
+            gap: 12mm;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            --agent-red: #b01a2e;
+            --agent-dark: #2d1b33;
+            --line-gray: #e2e8f0;
+        }
+        .page-2 h1 { font-size: 26pt; margin: 0; font-weight: 800; }
+        .page-2 .subtitle { font-size: 10pt; color: #64748b; margin-top: 2mm; }
+        .page-2 .header-section { grid-column: 1 / -1; margin-bottom: 8mm; }
+        .page-2 .question-block { margin-bottom: 6mm; }
+        .page-2 .question-title { display: flex; align-items: center; font-weight: bold; font-size: 11pt; margin-bottom: 2mm; line-height: 1.2; }
+        .page-2 .question-number { background-color: var(--agent-red); color: white; width: 18pt; height: 18pt; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8pt; margin-right: 8pt; flex-shrink: 0; }
+        .page-2 .line { border-bottom: 1pt solid var(--line-gray); height: 8mm; width: 100%; }
+        .page-2 .answer-lines { margin-left: 26pt; }
+        .page-2 .side-panel { display: flex; flex-direction: column; gap: 6mm; }
+        .page-2 .id-card { border: 1px solid #e2e8f0; border-radius: 12pt; padding: 15pt; background: #fff; }
+        .page-2 .photo-box { width: 100%; aspect-ratio: 1/1.1; background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 8pt; display: flex; align-items: center; justify-content: center; font-size: 20pt; }
+        .page-2 .card-label { color: var(--agent-red); font-weight: bold; font-size: 8pt; margin-top: 8pt; }
+        .page-2 .card-input { border-bottom: 1.2pt solid var(--agent-red); height: 18pt; margin-bottom: 2pt; }
+        .page-2 .triangle-logo { font-weight: 900; color: var(--agent-red); font-size: 11pt; text-align: right; line-height: 0.9; margin-top: 10pt; }
+        .page-2 .emergency-box { border: 1.2pt solid #fee2e2; border-radius: 10pt; padding: 12pt; background: #fffafb; }
+        .page-2 .side-panel .question-title { font-size: 10pt; }
+        .page-2 .side-panel .answer-lines { margin-left: 0; margin-top: 2mm; }
+        .page-2 .tag-icon { color: var(--agent-red); margin-right: 6pt; font-size: 12pt; }
+        .page-2 .answer-text {
+            font-size: 11pt;
+            line-height: 1.6;
+            color: #1e293b;
+            white-space: pre-wrap;
+            border-bottom: 1px dashed var(--line-gray);
+            padding-bottom: 5px;
+            overflow: hidden;
+            display: block;
+        }
+        /* Page 2 Answer Heights (Fixed) */
+        .page-2 .h-3-lines { height: 24mm; }
+        .page-2 .h-2-lines { height: 16mm; }
+        .page-2 .h-1-line  { height: 8mm; }
+
+        /* 第三页样式 (card3) */
+        .page-3 {
+            padding: 20px;
+            font-family: "Microsoft YaHei", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            --primary-blue: #3b5091;
+            --light-blue: #eef2ff;
+            --fail-red: #d9534f;
+            --border-color: #cbd5e1;
+        }
+        .page-3 .container {
+            width: 800px;
+            background: white;
+            padding: 40px;
+            box-sizing: border-box;
+            border-radius: 8px;
+        }
+        .page-3 .header { display: flex; align-items: center; margin-bottom: 30px; border-bottom: 2px solid var(--primary-blue); padding-bottom: 15px; }
+        .page-3 .title { font-size: 36px; font-weight: 900; color: #1e293b; }
+        .page-3 .name-line { border-bottom: 1px solid #64748b; display: inline-block; width: 200px; margin-left: 10px; }
+        .page-3 .ability-card { border: 2px solid var(--border-color); border-radius: 15px; margin-bottom: 25px; overflow: hidden; }
+        .page-3 .card-header { display: grid; grid-template-columns: 1fr 1fr 150px; background-color: var(--light-blue); border-bottom: 1px solid var(--border-color); padding: 5px 15px; font-size: 12px; font-weight: bold; color: var(--primary-blue); }
+        .page-3 .card-body { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 15px; }
+        .page-3 .success-side { border-right: 1px solid #eee; padding-right: 10px; }
+        .page-3 .success-title { color: var(--primary-blue); font-weight: bold; display: flex; align-items: center; margin-bottom: 10px; }
+        .page-3 .fail-side { padding-left: 5px; }
+        .page-3 .fail-title { color: var(--fail-red); font-weight: bold; display: flex; align-items: center; margin-bottom: 10px; }
+        .page-3 .input-line { border-bottom: 1px solid var(--primary-blue); height: 25px; margin-bottom: 8px; }
+        .page-3 .fail-line { border-bottom: 1px solid var(--fail-red); height: 25px; margin-bottom: 8px; }
+        .page-3 .qa-section { margin-top: 15px; font-size: 13px; color: var(--primary-blue); }
+        .page-3 .qa-row { display: flex; align-items: center; margin-bottom: 8px; }
+        .page-3 .qa-row input[type="text"] { border: none; border-bottom: 1px solid var(--primary-blue); flex-grow: 1; margin: 0 10px; outline: none; }
+        .page-3 .checkbox-group { display: flex; align-items: center; gap: 5px; font-size: 11px; }
+        .page-3 .square { width: 14px; height: 14px; border: 1px solid var(--primary-blue); display: inline-block; }
+        .page-3 .icon-star { color: var(--primary-blue); margin-right: 5px; }
+        .page-3 .icon-x { color: var(--fail-red); margin-right: 5px; }
+
+        /* 第四页样式 (card4) */
+        .page-4 {
+            padding: 15mm;
+            display: flex;
+            flex-direction: column;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            --relation-gold: #d4a017;
+            --relation-dark: #4a3701;
+            --relation-bg: #fff9e6;
+            --line-gray: #e2e8f0;
+        }
+        .page-4 .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10mm;
+            border-bottom: 2px solid var(--relation-gold);
+            padding-bottom: 15px;
+        }
+        .page-4 .title-group { display: flex; align-items: center; gap: 20px; }
+        .page-4 .title-group h1 {
+            font-size: 36px;
+            margin: 0;
+            color: var(--relation-dark);
+            font-weight: 900;
+        }
+        .page-4 .network-bar {
+            border: 1px solid var(--relation-gold);
+            border-radius: 8px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            width: auto;
+        }
+        .page-4 .network-icon { color: var(--relation-gold); margin-right: 10px; font-size: 14pt; }
+        .page-4 .network-text { font-weight: bold; color: var(--relation-dark); }
+        .page-4 .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8mm;
+            flex-grow: 1;
+        }
+        .page-4 .relation-card {
+            border: 2px solid var(--relation-gold);
+            border-radius: 12pt;
+            padding: 10pt;
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+        }
+        .page-4 .card-row-top {
+            display: flex;
+            background-color: var(--relation-bg);
+            border-bottom: 1px solid var(--relation-gold);
+            margin: -10pt -10pt 10pt -10pt;
+            padding: 5pt 10pt;
+            border-radius: 10pt 10pt 0 0;
+            font-size: 9pt;
+            font-weight: bold;
+            color: var(--relation-gold);
+        }
+        .page-4 .label-name { width: 60%; }
+        .page-4 .label-actor { width: 40%; }
+        .page-4 .card-label-small {
+            font-size: 9pt;
+            font-weight: bold;
+            color: var(--relation-gold);
+            margin-bottom: 3mm;
+        }
+        .page-4 .scale-container {
+            display: flex;
+            flex-direction: column;
+            margin: 5mm 0;
+        }
+        .page-4 .scale-numbers {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 5pt;
+            margin-bottom: 2pt;
+        }
+        .page-4 .scale-numbers span {
+            font-size: 9pt;
+            font-weight: bold;
+            color: var(--relation-gold);
+            width: 12pt;
+            text-align: center;
+        }
+        .page-4 .scale-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+        .page-4 .scale-line::before {
+            content: "";
+            position: absolute;
+            left: 10pt;
+            right: 10pt;
+            height: 1.5pt;
+            background-color: var(--relation-gold);
+            z-index: 1;
+        }
+        .page-4 .scale-dot {
+            width: 10pt;
+            height: 10pt;
+            border: 1.5pt solid var(--relation-gold);
+            background: white;
+            border-radius: 50%;
+            z-index: 2;
+        }
+        .page-4 .scale-arrow {
+            color: var(--relation-gold);
+            font-size: 10pt;
+            z-index: 2;
+        }
+        .page-4 .scale-footer {
+            text-align: right;
+            font-size: 8pt;
+            font-weight: bold;
+            color: var(--relation-gold);
+            margin-top: 2pt;
+        }
+        .page-4 .card-footer {
+            margin-top: auto;
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+        }
+        .page-4 .lines-area { flex-grow: 1; }
+        .page-4 .line { border-bottom: 1pt solid var(--relation-gold); height: 7mm; width: 100%; }
+        .page-4 .activate-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2pt;
+        }
+        .page-4 .square {
+            width: 18pt;
+            height: 18pt;
+            border: 1.5pt solid var(--relation-gold);
+            border-radius: 4pt;
+        }
+        .page-4 .activate-text {
+            font-size: 8pt;
+            font-weight: bold;
+            color: var(--relation-gold);
+            margin-top: 2pt;
+        }
+
+        /* 第五页样式 (card5) */
+        .page-5 {
+            padding: 15mm;
+            display: flex;
+            flex-direction: column;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            --claim-red: #c1272d;
+            --claim-pink-bg: #fff1f2;
+            --claim-dark: #2d1b33;
+            --line-gray: #cbd5e1;
+        }
+        .page-5 .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8mm;
+            border-bottom: 2px solid var(--claim-red);
+            padding-bottom: 15px;
+        }
+        .page-5 .title-area h1 {
+            font-size: 36px;
+            margin: 0;
+            color: var(--claim-dark);
+            font-weight: 900;
+        }
+        .page-5 .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6mm;
+            margin-top: 5mm;
+        }
+        .page-5 .item-card {
+            border: 1.5pt solid #fecaca;
+            border-radius: 12pt;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .page-5 .card-header {
+            background-color: #fee2e2;
+            display: grid;
+            grid-template-columns: 1fr 1px 1fr;
+            padding: 6pt 10pt;
+            border-bottom: 1pt solid #fecaca;
+        }
+        .page-5 .header-label {
+            font-size: 9pt;
+            font-weight: bold;
+            color: var(--claim-red);
+        }
+        .page-5 .vertical-divider {
+            background-color: #fca5a5;
+            height: 100%;
+        }
+        .page-5 .card-body {
+            padding: 8pt 12pt;
+            background-color: white;
+        }
+        .page-5 .effect-label {
+            font-size: 9pt;
+            font-weight: bold;
+            color: var(--claim-red);
+            margin-bottom: 2mm;
+        }
+        .page-5 .line {
+            border-bottom: 1pt solid var(--line-gray);
+            height: 7.5mm;
+            width: 100%;
+        }
+
+        /* 打印优化 */
+        @media print {
+            body { background: none; }
+            .page-wrapper { box-shadow: none; margin: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 第一页: 原始角色卡 -->
+    <div class="page-wrapper page-1 shadow-2xl">
+        <div class="flex-1 flex flex-col">
+            <div class="flex gap-6 mb-8">
+                <div class="flex-[3] space-y-4">
+                    <div class="border-b-2 border-slate-800 pb-1 font-bold h-10 flex items-end justify-between">
+                        <span>张三</span>
+                        <span class="text-xs text-slate-400 font-normal">我</span>
+                    </div>
+                    <div class="border-b-2 border-slate-800 pb-1 font-bold h-10 flex items-end">实习</div>
+                    <div class="border-b-2 border-slate-800 pb-1 font-bold h-10 flex items-end">实习</div>
+                </div>
+                <div class="flex-1 border-2 border-slate-200 bg-slate-50 flex items-center justify-center text-slate-400 overflow-hidden h-40">
+                    <img src="data:image/png;base64,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1KcU5rDyn3eurtzm1T/ndm5u3sFcE4HK8TLUy/nez31Nb4pw80n/Wm6Ow3zHHHGiRtEBTQ83b0tST66mBHtHdwBn2roYxOQ18Hs9zC3GIMpjn+pVjEOQb0Cpfy03clgoMJPrHdGrPK+/3juj5yN3EDicQeFwPjuKmDVclaKBO/eMuYdCP1gbCihGQDBSxnBPWAVHvAWKFu4RbynrgKZrAQtu03WZVWGjLWDBbbSlrHKmawELbtN1mVVhoy1gwW20paxypmsBC27TdZlVYaMtYMFttKWscqZrAQtu03WZVWGjLWDBbbSlrHKmawELbtN1mVVhoy1gwW20paxypmsBC27TdZlVYaMtYMFttKWscqZrAQtu03WZVWGjLWDBbbSlrHKmawELbtN1mVVhoy1gwW20paxypmsBC27TdZlVYaMtYMFttKWscqZrAQtu03WZVWGjLWDBbbSlrHKmawELbtN1mVVhoy1gwW20paxypmsBC27TdZlVYaMtYMFttKWscqZrAQtu03WZVWGjLWDBbbSlrHKmawELbtN1mVVhoy1gwW20paxypmsBC27TdZlVYaMtYMFttKWscqZrAQtu03WZVWGjLWDBbbSlrHKmawELbtN1mVVhoy1gwW20paxypmsBC27TdZlVYaMtYMFttKWscqZrAQtu03WZVWGjLWDBbbSlrHKmawELbtN1mVVhoy1gwW20paxypmsBC27TdZlVYaMtYMFttKWscqZrgf8B/lrRdxAcfcIAAAAASUVORK5CYII=" class="w-full h-full object-cover">
+                    
+                </div>
+            </div>
+
+            <div class="space-y-4 mb-8">
+                <div class="text-2xl font-black arc-red">🏆 嘉奖</div>
+                <div class="text-2xl font-black arc-red">⚖️ 申诫</div>
+                <div class="text-2xl font-black arc-red">🔥 额外过载</div>
+            </div>
+
+            <div class="flex-1 flex flex-col gap-6">
+                <section class="border-l-4 border-arc-yellow pl-4 flex-1">
+                    <h3 class="arc-yellow font-black text-xl mb-2">▶ 现实触发器</h3>
+                    <div class="text-sm leading-relaxed">工作手机
+你有一部专用于你职业的智能手机。GM可随时使用现实触发器，让你的一段人际关系拨打这部电话。如果你不接，该人际关系将失去一点连结。
+如果你未能履行你职业的必要职责，或丢失了手机，请在一条四格的“有所失”条上标记下一个空格。当所有格子都被标记后再次发生这种情况，你的职业生涯将不可挽回地终结。若以此种或其他任何方式终结，你必须选择一个新的现实。</div>
+                </section>
+
+                <section class="border-l-4 border-arc-yellow pl-4 flex-1">
+                    <h3 class="arc-yellow font-black text-xl mb-2">▶ 过载解除</h3>
+                    <div class="text-sm leading-relaxed">穿针引线
+当你做某件算作你职业的工作或练习的事时，忽视所有过载。</div>
+                </section>
+
+                <section class="border-l-4 border-arc-red pl-4 flex-[1.5]">
+                    <h3 class="arc-red font-black text-xl mb-2">▶ 首要指令</h3>
+                    <p class="text-xs text-slate-400 mb-2 italic">如果你……，则获得1点申诫：</p>
+                    <div class="text-sm leading-relaxed">维持等级制度。：每当你接受命令时，记 1 次申诫。</div>
+                </section>
+
+                <section class="border-l-4 border-arc-red pl-4 flex-[2]">
+                    <h3 class="arc-red font-black text-xl mb-2">▶ 许可行为</h3>
+                    <p class="text-xs text-slate-400 mb-2">完成以下事项获得嘉奖：</p>
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2 font-bold arc-red">▷ <div class="flex-1 border-b border-dashed border-red-200 text-sm font-normal text-black">让某人按你的意愿行事。</div></div>
+                        <div class="flex items-center gap-2 font-bold arc-red">▷ <div class="flex-1 border-b border-dashed border-red-200 text-sm font-normal text-black">享受生活中的一件雅事。</div></div>
+                        <div class="flex items-center gap-2 font-bold arc-red">▷ <div class="flex-1 border-b border-dashed border-red-200 text-sm font-normal text-black">做出必要的牺牲。</div></div>
+                        <div class="flex items-center gap-2 font-bold arc-red">▷ <div class="flex-1 border-b border-dashed border-red-200 text-sm font-normal text-black"></div></div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <div class="w-72 flex flex-col">
+            <div class="space-y-4 mb-10">
+                <div class="flex items-center gap-4"><div class="triangle arc-blue"><span>A</span></div><div class="flex-1 border-b-2 border-arc-blue font-bold arc-blue">汲取</div></div>
+                <div class="flex items-center gap-4"><div class="triangle arc-yellow"><span>R</span></div><div class="flex-1 border-b-2 border-arc-yellow font-bold arc-yellow">日程过载-家教</div></div>
+                <div class="flex items-center gap-4"><div class="triangle arc-red"><span>C</span></div><div class="flex-1 border-b-2 border-arc-red font-bold arc-red">首席执行官</div></div>
+            </div>
+
+            <div class="relative flex-1">
+                <div class="flex justify-between items-start mb-6">
+                    <h2 class="text-3xl font-black leading-tight">资质保证</h2>
+                    <div class="arc-red text-4xl">⚓</div>
+                </div>
+                <div class="space-y-5">
+                    <div class="flex items-start gap-2 stat-row" data-max="2">
+                        <div class="text-[9px] font-bold arc-red rotate-[-90deg] mt-1.5">MAX</div>
+                        <div class="w-8 h-8 bg-red-50 rotate-45 border border-red-100 flex-shrink-0 relative">
+                            <div class="absolute inset-0 flex items-center justify-center -rotate-45 text-xs font-bold">2</div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-bold mb-1">专注</div>
+                            <div class="stats-grid">
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2 stat-row" data-max="5">
+                        <div class="text-[9px] font-bold arc-red rotate-[-90deg] mt-1.5">MAX</div>
+                        <div class="w-8 h-8 bg-red-50 rotate-45 border border-red-100 flex-shrink-0 relative">
+                            <div class="absolute inset-0 flex items-center justify-center -rotate-45 text-xs font-bold">5</div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-bold mb-1">欺瞒</div>
+                            <div class="stats-grid">
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2 stat-row" data-max="7">
+                        <div class="text-[9px] font-bold arc-red rotate-[-90deg] mt-1.5">MAX</div>
+                        <div class="w-8 h-8 bg-red-50 rotate-45 border border-red-100 flex-shrink-0 relative">
+                            <div class="absolute inset-0 flex items-center justify-center -rotate-45 text-xs font-bold">7</div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-bold mb-1">活力</div>
+                            <div class="stats-grid">
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2 stat-row" data-max="5">
+                        <div class="text-[9px] font-bold arc-red rotate-[-90deg] mt-1.5">MAX</div>
+                        <div class="w-8 h-8 bg-red-50 rotate-45 border border-red-100 flex-shrink-0 relative">
+                            <div class="absolute inset-0 flex items-center justify-center -rotate-45 text-xs font-bold">5</div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-bold mb-1">共情</div>
+                            <div class="stats-grid">
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2 stat-row" data-max="4">
+                        <div class="text-[9px] font-bold arc-red rotate-[-90deg] mt-1.5">MAX</div>
+                        <div class="w-8 h-8 bg-red-50 rotate-45 border border-red-100 flex-shrink-0 relative">
+                            <div class="absolute inset-0 flex items-center justify-center -rotate-45 text-xs font-bold">4</div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-bold mb-1">主动</div>
+                            <div class="stats-grid">
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2 stat-row" data-max="1">
+                        <div class="text-[9px] font-bold arc-red rotate-[-90deg] mt-1.5">MAX</div>
+                        <div class="w-8 h-8 bg-red-50 rotate-45 border border-red-100 flex-shrink-0 relative">
+                            <div class="absolute inset-0 flex items-center justify-center -rotate-45 text-xs font-bold">1</div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-bold mb-1">坚毅</div>
+                            <div class="stats-grid">
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2 stat-row" data-max="3">
+                        <div class="text-[9px] font-bold arc-red rotate-[-90deg] mt-1.5">MAX</div>
+                        <div class="w-8 h-8 bg-red-50 rotate-45 border border-red-100 flex-shrink-0 relative">
+                            <div class="absolute inset-0 flex items-center justify-center -rotate-45 text-xs font-bold">3</div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-bold mb-1">气场</div>
+                            <div class="stats-grid">
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2 stat-row" data-max="7">
+                        <div class="text-[9px] font-bold arc-red rotate-[-90deg] mt-1.5">MAX</div>
+                        <div class="w-8 h-8 bg-red-50 rotate-45 border border-red-100 flex-shrink-0 relative">
+                            <div class="absolute inset-0 flex items-center justify-center -rotate-45 text-xs font-bold">7</div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-bold mb-1">专业</div>
+                            <div class="stats-grid">
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-2 stat-row" data-max="7">
+                        <div class="text-[9px] font-bold arc-red rotate-[-90deg] mt-1.5">MAX</div>
+                        <div class="w-8 h-8 bg-red-50 rotate-45 border border-red-100 flex-shrink-0 relative">
+                            <div class="absolute inset-0 flex items-center justify-center -rotate-45 text-xs font-bold">7</div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-bold mb-1">诡秘</div>
+                            <div class="stats-grid">
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                                <div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div><div class="stat-box"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第二页: 特工调查表 -->
+    <div class="page-wrapper page-2 shadow-2xl">
+        <div class="main-content">
+            <div class="header-section">
+                <h1>欢迎你，特工！</h1>
+                <p class="subtitle">请尽可能如实回答以下问题，以便机构和你的同事能更多地了解你。</p>
+            </div>
+
+            <div class="question-block">
+                <div class="question-title"><span class="question-number">0.A</span> 描述你的外貌</div>
+                <div class="answer-lines answer-text h-3-lines">普通人的外貌</div>
+            </div>
+
+            <div class="question-block">
+                <div class="question-title"><span class="question-number">0.B</span> 描述你的性格</div>
+                <div class="answer-lines answer-text h-3-lines">随和的性格</div>
+            </div>
+
+            <div class="question-block">
+                <div class="question-title"><span class="question-number">1</span> 你是如何与你的异常体接触的？</div>
+                <div class="answer-lines answer-text h-3-lines">偶遇</div>
+            </div>
+
+            <div class="question-block">
+                <div class="question-title"><span class="question-number">2</span> 机构是如何找到你的？</div>
+                <div class="answer-lines answer-text h-3-lines">上门走访调查</div>
+            </div>
+
+            <div class="question-block">
+                <div class="question-title"><span class="question-number">3</span> 你的能力有独特的外在视觉表现吗？</div>
+                <div class="answer-lines answer-text h-2-lines">无</div>
+            </div>
+
+            <div class="question-block">
+                <div class="question-title"><span class="question-number">4</span> 你喝咖啡有什么偏好？</div>
+                <div class="answer-lines answer-text h-1-line">美式咖啡</div>
+            </div>
+
+            <div class="question-block">
+                <div class="question-title"><span class="question-number">5</span> 请描述你过往的工作经历。</div>
+                <div class="answer-lines answer-text h-2-lines">无业</div>
+            </div>
+        </div>
+
+        <div class="side-panel">
+            <div class="id-card">
+                <div class="photo-box">
+                    <img src="data:image/png;base64,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1KcU5rDyn3eurtzm1T/ndm5u3sFcE4HK8TLUy/nez31Nb4pw80n/Wm6Ow3zHHHGiRtEBTQ83b0tST66mBHtHdwBn2roYxOQ18Hs9zC3GIMpjn+pVjEOQb0Cpfy03clgoMJPrHdGrPK+/3juj5yN3EDicQeFwPjuKmDVclaKBO/eMuYdCP1gbCihGQDBSxnBPWAVHvAWKFu4RbynrgKZrAQtu03WZVWGjLWDBbbSlrHKmawELbtN1mVVhoy1gwW20paxypmsBC27TdZlVYaMtYMFttKWscqZrAQtu03WZVWGjLWDBbbSlrHKmawELbtN1mVVhoy1gwW20paxypmsBC27TdZlVYaMtYMFttKWscqZrAQtu03WZVWGjLWDBbbSlrHKmawELbtN1mVVhoy1gwW20paxypmsBC27TdZlVYaMtYMFttKWscqZrAQtu03WZVWGjLWDBbbSlrHKmawELbtN1mVVhoy1gwW20paxypmsBC27TdZlVYaMtYMFttKWscqZrAQtu03WZVWGjLWDBbbSlrHKmawELbtN1mVVhoy1gwW20paxypmsBC27TdZlVYaMtYMFttKWscqZrAQtu03WZVWGjLWDBbbSlrHKmawELbtN1mVVhoy1gwW20paxypmsBC27TdZlVYaMtYMFttKWscqZrAQtu03WZVWGjLWDBbbSlrHKmawELbtN1mVVhoy1gwW20paxypmsBC27TdZlVYaMtYMFttKWscqZrgf8B/lrRdxAcfcIAAAAASUVORK5CYII=" class="w-full h-full object-cover">
+                </div>
+                <div class="card-label">姓名</div><div class="card-input" style="font-size:12px; line-height:18px;">张三</div>
+                <div class="card-label">人称代词</div><div class="card-input" style="font-size:12px; line-height:18px;">我</div>
+                <div class="triangle-logo">TRIANGLE<br>AGENCY</div>
+            </div>
+
+            <div class="emergency-box">
+                <div class="card-label" style="margin-top:0">紧急联系人</div><div class="card-input"></div>
+                <div class="card-label">关系</div><div class="card-input"></div>
+            </div>
+
+            <div class="side-questions" style="margin-top: 5mm;">
+                <div class="question-block">
+                    <div class="question-title"><span class="question-number">6</span> 你对办公套件的熟悉程度？</div>
+                    <div class="answer-lines answer-text h-1-line">不熟悉</div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-title"><span class="question-number">7</span> 协作中你能做出什么贡献？</div>
+                    <div class="answer-lines answer-text h-2-lines">听从指挥</div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-title"><span class="tag-icon">🔖</span> 补充说明</div>
+                    <div class="answer-lines answer-text h-2-lines">暂无</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第三页: 异常能力 -->
+    <div class="page-wrapper page-3 shadow-2xl">
+        <div class="container">
+            <div class="header">
+                <div class="title">异常能力</div>
+            </div>
+
+            
+            <div class="ability-card">
+                <div class="card-header">
+                    <div>你还想要更多吗？</div>
+                    <div style="font-size: 10px; font-weight: normal; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" title="对你而言，欲望是一个水桶。说出“你还想要更多吗？”来戳个洞，并掷共情。"></div>
+                    <div style="text-align:right">欺瞒</div>
+                </div>
+                <div class="card-body">
+                    <div class="success-side">
+                        <div class="success-title">▲ 成功时， <div style="flex-grow:1; border-bottom:1px solid var(--primary-blue); margin-left:10px;"></div></div>
+                        <div class="input-line" style="height:auto; min-height:25px; font-size:11px;">成功时，与你交谈的人会对他/她最后享受过的事物（关注、喜爱、冰淇淋、休息等）产生浓厚的兴趣，具体事物由你和该角色的玩家共同确定。这不会造成成瘾或强迫行为，但如果该事物唾手可得，它将成为远超其本身价值的筹码或干扰。</div>
+                        
+                        <div style="display:flex; align-items:center; margin-top:20px;">
+                            <span class="icon-star">★</span> 
+                            <div style="background:#e2e8f0; width:80px; height:18px; border-radius:10px; margin-right:10px;"></div>,
+                            <div style="flex-grow:1; border-bottom:1px solid var(--primary-blue); font-size:11px;">每额外一个 3，你可以将他们的欲望传播给附近另一个目标，产生类似效果。</div>
+                        </div>
+                    </div>
+                    
+                    <div class="fail-side">
+                        <div class="fail-title">✘ 失败时， <div style="flex-grow:1; border-bottom:1px solid var(--fail-red); margin-left:10px;"></div></div>
+                        <div class="fail-line" style="height:auto; min-height:25px; font-size:11px;">失败时，目标会对他们最后享受过的事物产生厌恶。你“更多”的提议对他们而言是一种侮辱，从今往后，光是想到那件事物都会令他们作呕。</div>
+                        
+                        <div class="qa-section">
+                            <div class="qa-row">
+                                问: <input type="text" value="我可以把马牵到水边……" readonly style="background:transparent;"> 
+                                <div class="checkbox-group">已练习? <div class="square"></div></div>
+                            </div>
+                            <div style="text-align:right; font-size:11px; margin-bottom:5px;">页码 # ________</div>
+                            
+                            <div class="qa-row">
+                                答: <input type="text" value="但谁会喝水呢？" readonly style="background:transparent;"> ➔ <div class="square"></div> <div class="square"></div> <div class="square"></div>
+                                <span style="margin-left:5px; font-size:10px; color:#999;">(Y4)</span>
+                            </div>
+                            <div class="qa-row">
+                                答: <input type="text" value="但我会先喝。" readonly style="background:transparent;"> ➔ <div class="square"></div> <div class="square"></div> <div class="square"></div>
+                                <span style="margin-left:5px; font-size:10px; color:#999;">(C1)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ability-card">
+                <div class="card-header">
+                    <div>借用</div>
+                    <div style="font-size: 10px; font-weight: normal; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" title="你可以选择一个凡俗目标的某个特征并据为己有。他们的脸、声音、爱、指纹——现在你拥有了，而他们没有。掷欺瞒。"></div>
+                    <div style="text-align:right">共情</div>
+                </div>
+                <div class="card-body">
+                    <div class="success-side">
+                        <div class="success-title">▲ 成功时， <div style="flex-grow:1; border-bottom:1px solid var(--primary-blue); margin-left:10px;"></div></div>
+                        <div class="input-line" style="height:auto; min-height:25px; font-size:11px;">成功时，此效果可持续长达一小时。</div>
+                        
+                        <div style="display:flex; align-items:center; margin-top:20px;">
+                            <span class="icon-star">★</span> 
+                            <div style="background:#e2e8f0; width:80px; height:18px; border-radius:10px; margin-right:10px;"></div>,
+                            <div style="flex-grow:1; border-bottom:1px solid var(--primary-blue); font-size:11px;">每额外一个 3，选择一项：目标保留一个有缺陷的版本；效果额外持续一小时；你可以将借来的东西分享给另一个目标。</div>
+                        </div>
+                    </div>
+                    
+                    <div class="fail-side">
+                        <div class="fail-title">✘ 失败时， <div style="flex-grow:1; border-bottom:1px solid var(--fail-red); margin-left:10px;"></div></div>
+                        <div class="fail-line" style="height:auto; min-height:25px; font-size:11px;">失败时，目标会永久失去你所取走之物，且无人能得到它。他们会记得自己失去了什么。</div>
+                        
+                        <div class="qa-section">
+                            <div class="qa-row">
+                                问: <input type="text" value="人们爱我，因为……" readonly style="background:transparent;"> 
+                                <div class="checkbox-group">已练习? <div class="square"></div></div>
+                            </div>
+                            <div style="text-align:right; font-size:11px; margin-bottom:5px;">页码 # ________</div>
+                            
+                            <div class="qa-row">
+                                答: <input type="text" value="如果他们不爱，我就找新的人。" readonly style="background:transparent;"> ➔ <div class="square"></div> <div class="square"></div> <div class="square"></div>
+                                <span style="margin-left:5px; font-size:10px; color:#999;">(R9)</span>
+                            </div>
+                            <div class="qa-row">
+                                答: <input type="text" value="我确保自己完美无瑕。" readonly style="background:transparent;"> ➔ <div class="square"></div> <div class="square"></div> <div class="square"></div>
+                                <span style="margin-left:5px; font-size:10px; color:#999;">(S15)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ability-card">
+                <div class="card-header">
+                    <div>万能受体</div>
+                    <div style="font-size: 10px; font-weight: normal; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" title="当你受到伤害或以任何方式受伤时，你可以掷坚毅。"></div>
+                    <div style="text-align:right">主动</div>
+                </div>
+                <div class="card-body">
+                    <div class="success-side">
+                        <div class="success-title">▲ 成功时， <div style="flex-grow:1; border-bottom:1px solid var(--primary-blue); margin-left:10px;"></div></div>
+                        <div class="input-line" style="height:auto; min-height:25px; font-size:11px;">成功时，选择一个除伤害来源外的附近活人或异常体。他们会代你受伤，而你安然无恙。</div>
+                        
+                        <div style="display:flex; align-items:center; margin-top:20px;">
+                            <span class="icon-star">★</span> 
+                            <div style="background:#e2e8f0; width:80px; height:18px; border-radius:10px; margin-right:10px;"></div>,
+                            <div style="flex-grow:1; border-bottom:1px solid var(--primary-blue); font-size:11px;">每额外一个 3，你可以选择一个额外目标，使其受到同样的伤害。</div>
+                        </div>
+                    </div>
+                    
+                    <div class="fail-side">
+                        <div class="fail-title">✘ 失败时， <div style="flex-grow:1; border-bottom:1px solid var(--fail-red); margin-left:10px;"></div></div>
+                        <div class="fail-line" style="height:auto; min-height:25px; font-size:11px;">失败时，你的痛苦会循环反噬，你会受到三倍的伤害。如果在你死后仍有剩余的伤害，它会寻找附近的其他目标，直到伤害全部被施加。</div>
+                        
+                        <div class="qa-section">
+                            <div class="qa-row">
+                                问: <input type="text" value="当有人伤害我时……" readonly style="background:transparent;"> 
+                                <div class="checkbox-group">已练习? <div class="square"></div></div>
+                            </div>
+                            <div style="text-align:right; font-size:11px; margin-bottom:5px;">页码 # ________</div>
+                            
+                            <div class="qa-row">
+                                答: <input type="text" value="这是一次宝贵的学习机会。" readonly style="background:transparent;"> ➔ <div class="square"></div> <div class="square"></div> <div class="square"></div>
+                                <span style="margin-left:5px; font-size:10px; color:#999;">(S19)</span>
+                            </div>
+                            <div class="qa-row">
+                                答: <input type="text" value="他们不该那么做的。他们为什么要那么做？" readonly style="background:transparent;"> ➔ <div class="square"></div> <div class="square"></div> <div class="square"></div>
+                                <span style="margin-left:5px; font-size:10px; color:#999;">(B11)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+</div>
+    </div>
+
+    <!-- 第四页: 角色关系网 -->
+    <div class="page-wrapper page-4 shadow-2xl">
+        <div class="header">
+            <div class="title-group">
+                <h1>关系</h1>
+                <div class="network-bar">
+                    <span class="network-icon">🌐</span>
+                    <span class="network-text">关系网内的关系</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="cards-grid" id="page-4-grid"></div>
+    </div>
+
+    <!-- 第五页: 申领物与福利 -->
+    <div class="page-wrapper page-5 shadow-2xl">
+        <div class="header">
+            <div class="title-area">
+                <h1>申领物与福利</h1>
+            </div>
+        </div>
+
+        <div class="cards-grid" id="page-5-grid"></div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var rows = document.querySelectorAll(".stat-row");
+            rows.forEach(function (row) {
+                var maxAttr = row.getAttribute("data-max") || "";
+                var max = parseInt(maxAttr, 10);
+                if (isNaN(max) || max <= 0) {
+                    return;
+                }
+                var boxes = row.querySelectorAll(".stats-grid .stat-box");
+                boxes.forEach(function (box, index) {
+                    if (index < max) {
+                        box.classList.add("stat-box-active");
+                    } else {
+                        box.classList.remove("stat-box-active");
+                    }
+                });
+            });
+
+            // Page 4 generation
+            const page4Grid = document.getElementById('page-4-grid');
+            if (page4Grid) {
+                let html = '';
+                for (let i = 0; i < 6; i++) {
+                    html += `
+                    <div class="relation-card">
+                        <div class="card-row-top">
+                            <div class="label-name">姓名</div>
+                            <div class="label-actor">扮演者</div>
+                        </div>
+                        <div class="card-label-small">描述</div>
+                        <div style="border-bottom: 1pt solid var(--relation-gold); height: 15px;"></div>
+                        
+                        <div class="scale-container">
+                            <div class="scale-numbers">
+                                <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
+                            </div>
+                            <div class="scale-line">
+                                <span class="scale-arrow">▶</span>
+                                ${' <div class="scale-dot"></div> '.repeat(9)}
+                                <span class="scale-icon" style="color:var(--relation-gold); font-size:12pt; z-index:2; background:white;">🌐</span>
+                            </div>
+                            <div class="scale-footer">关系网内 ▲</div>
+                        </div>
+
+                        <div class="card-label-small" style="margin-bottom:0">连结加成</div>
+                        <div class="card-footer">
+                            <div class="lines-area">
+                                <div class="line"></div>
+                                <div class="line"></div>
+                            </div>
+                            <div class="activate-box">
+                                <div class="square"></div>
+                                <span class="activate-text">激活</span>
+                            </div>
+                        </div>
+                    </div>`;
+                }
+                page4Grid.innerHTML = html;
+            }
+
+            // Page 5 generation
+            const page5Grid = document.getElementById('page-5-grid');
+            if (page5Grid) {
+                let html = '';
+                for (let i = 0; i < 6; i++) {
+                    html += `
+                    <div class="item-card">
+                        <div class="card-header">
+                            <div class="header-label">姓名</div>
+                            <div class="vertical-divider"></div>
+                            <div class="header-label" style="padding-left:10px">页面/PD代码</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="effect-label">效果</div>
+                            <div class="line"></div>
+                            <div class="line"></div>
+                            <div class="line"></div>
+                            <div class="line"></div>
+                            <div class="line"></div>
+                            <div class="line"></div>
+                        </div>
+                    </div>`;
+                }
+                page5Grid.innerHTML = html;
+            }
+        });
+    </script>
+</body>
+</html>
